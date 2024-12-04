@@ -46,12 +46,7 @@ class AddFloorController extends GetxController {
   }
 
 
-addFloor() async {
-  // Check if total floors is valid
-  if (totalfloors.value.isEmpty) {
-    snackBar("Error", "Total floors cannot be empty");
-    return;
-  }
+
 
 addFloor() async {
   if (totalfloors.value.isEmpty) {
@@ -89,5 +84,3 @@ addFloor() async {
 
 }
 
-
-}

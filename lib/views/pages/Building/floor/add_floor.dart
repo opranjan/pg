@@ -36,9 +36,30 @@ class AddFloor extends StatelessWidget {
           );
         },
       ),
+
+
+             // Floating Action Button with text
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 25),
+        child: FloatingActionButton.extended(
+          onPressed: (){
+            // Show the custom dialog to add a floor
+            _showCustomDialog(context, Get.find<AddFloorController>());
+          }, 
+          label: const Icon(Icons.add),
+          backgroundColor: Colors.white, 
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
+
+
+  
 }
+
+
+
 
 
   // Function to show the custom dialog for adding a floor

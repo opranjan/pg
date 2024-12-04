@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:pg/constants/app_constant.dart';
+import 'package:pg/models/room/add_room_model.dart';
 import 'package:pg/models/roommodels/room_model.dart';
 import 'package:pg/services/dio_services.dart';
 
@@ -65,9 +67,9 @@ class RoomController extends GetxController {
   Future<void> fetchRooms() async {
     isLoading.value = true;
     try {
-      final response = await DioServices.get("buildings/6");
+      final response = await DioServices.get("floors/1/rooms");
       if (response.statusCode == 200) {
-        rooms.value = (response.data['rooms'] as List)
+        rooms.value = (response.data as List)
             .map((json) => RoomModel.fromJson(json))
             .toList();
 
@@ -80,6 +82,33 @@ class RoomController extends GetxController {
       Get.snackbar("Exception", "Something went wrong: $error");
     } finally {
       isLoading.value = false;
+    }
+  }
+
+
+
+
+
+    Future<void> createRoom(AddRoom room) async {
+    try {
+      
+        final response =
+            await DioServices.postRequest(AppConstant.addroom('1'), room.toJson());
+
+        if (response.statusCode == 200) {
+          Get.snackbar("Success", "User Added successfully",
+              snackPosition: SnackPosition.BOTTOM);
+          // Get.to(() => StaffSettings());
+          fetchRooms();
+        } else {
+          Map<String, dynamic> responseData = response.data;
+          Get.snackbar("Error", "${responseData['error']}",
+              snackPosition: SnackPosition.BOTTOM);
+        }
+     
+    } catch (error) {
+      Get.snackbar("Error", "Error occured ",
+          snackPosition: SnackPosition.BOTTOM);
     }
   }
 

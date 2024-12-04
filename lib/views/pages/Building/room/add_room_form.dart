@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg/controllers/propertycontroller/room_controller.dart';
+import 'package:pg/models/room/add_room_model.dart';
 import 'package:pg/views/widgets/app_bar.dart';
 import 'package:pg/views/widgets/custom_button.dart';
 
 class AddRoomForm extends StatelessWidget {
-  final RoomController controller = Get.put(RoomController());
+  final RoomController roomController = Get.put(RoomController());
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -257,11 +258,31 @@ class AddRoomForm extends StatelessWidget {
 
                   Center(
                     child: CustomButton(text: "Add Room", onPressed: (){
-                       if (formKey.currentState!.validate()) {
+                      //  if (formKey.currentState!.validate()) {
                             // Process form submission
+
+                            roomController.createRoom(
+                              AddRoom(
+                                name: "Dolphin room",
+                                capacity: 4,
+                                 price: 5000, 
+                                 availability: true, 
+                                 unitType: "2bhk",
+                                  sharingType: "2", 
+                                  rent: 6000,
+                                  maximum: 6000, 
+                                  minimum: 5000, 
+                                  areaSqft: 450, 
+                                  remarks: "remarks", 
+                                  facilities: ["Ac, Tv, freeze, Washing machine"], 
+                                  lastReading: 40, 
+                                  date: "30-11-24", 
+                                  other: ["other"]
+                                  ));
+                          
                             Get.snackbar('Success', 'Form submitted successfully!',
                                 snackPosition: SnackPosition.BOTTOM);
-                          }
+                          // }
                     }),
                   )
                 ],
