@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pg/views/pages/Building/floor/add_floor.dart';
-import 'package:pg/views/pages/Money/money_page.dart';
 import 'package:pg/views/pages/Building/dashboard/property_dashboard.dart';
 import 'package:pg/views/pages/Building/room/rooms_screen_building.dart';
 
@@ -17,7 +16,7 @@ class _BuildingPageState extends State<BuildingPage> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this); // 5 tabs
+    _tabController = TabController(length: 4, vsync: this); // 4 tabs
   }
 
   @override
@@ -36,15 +35,15 @@ class _BuildingPageState extends State<BuildingPage> with SingleTickerProviderSt
             preferredSize: Size.fromHeight(50.0),
             child: Container(
               color: Colors.white, // Customize tab bar color
+              width: double.infinity, // Ensure it takes up the full width
               child: TabBar(
-                isScrollable: true, // Allow the tabs to be scrollable
+                isScrollable: true, // Allow the tabs to be scrollable if they don't fit
                 controller: _tabController,
                 tabs: [
                   Tab(child: Text('Dashboard')),
                   Tab(child: Text('Floors')),
                   Tab(child: Text('Rooms')),
                   Tab(child: Text('Listing')),
-                  
                 ],
               ),
             ),
@@ -58,7 +57,6 @@ class _BuildingPageState extends State<BuildingPage> with SingleTickerProviderSt
                 AddFloor(),
                 RoomsScreen(),
                 ListingScreen(),
-              
               ],
             ),
           ),
@@ -68,44 +66,12 @@ class _BuildingPageState extends State<BuildingPage> with SingleTickerProviderSt
   }
 }
 
-// Screen for the Dashboard tab
-class DashboardScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Dashboard Content'),
-    );
-  }
-}
-
-
-
 // Screen for the Listing tab
 class ListingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Text('Listing Content'),
-    );
-  }
-}
-
-// Screen for the Complaint tab
-class ComplaintScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Complaint Content'),
-    );
-  }
-}
-
-// Screen for the Food tab
-class FoodScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Food Content'),
     );
   }
 }

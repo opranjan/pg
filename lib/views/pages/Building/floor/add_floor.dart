@@ -8,42 +8,43 @@ class AddFloor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AddFloorController controller = Get.put(AddFloorController());
-
     return Scaffold(
-      body: Center(
-        child: GetBuilder<AddFloorController>(
-          builder: (controller) {
-            // Check if the floorlist is empty
-            if (controller.floorlist.isEmpty) {
-              return ElevatedButton(
-                onPressed: () {
-                  _showCustomDialog(context, controller);
+      body: GetBuilder<AddFloorController>(
+        init: AddFloorController(),
+        builder: (fc) {
+          if (fc.isLoading.value) {
+            return const Center(child: CircularProgressIndicator()); // Loading indicator
+          }
+
+          if (fc.floorlist.isEmpty) {
+            return const Center(child: Text('No floors available'));
+          }
+
+          return ListView.builder(
+            itemCount: fc.floorlist.length,
+            itemBuilder: (context, index) {
+              final floor = fc.floorlist[index];
+              return ListTile(
+                title: Text(floor.floorNo.toString()), // Assuming `name` is a property of Floor model
+                // subtitle: Text('Floor ID: ${floor.id}'),
+                trailing: Icon(Icons.arrow_forward),
+                onTap: () {
+                  // Handle tap event, like showing floor details or editing
                 },
-                child: Text('Add Floor'),
               );
-            } else {
-              // If floorlist is not empty, show the list of floors
-              return ListView.builder(
-                itemCount: controller.floorlist.length,
-                itemBuilder: (context, index) {
-                  Floor floor = controller.floorlist[index];
-                  return ListTile(
-                    title: Text('Floor ${floor.id}'),
-                    subtitle: Text('Total Floors: ${floor.floorNumber}'),
-                  );
-                },
-              );
-            }
-          },
-        ),
+            },
+          );
+        },
       ),
     );
   }
+}
+
 
   // Function to show the custom dialog for adding a floor
   void _showCustomDialog(BuildContext context, AddFloorController controller) {
     final TextEditingController _totalFloorsController = TextEditingController();
+    bool isError = false; // Track error state for the input field
 
     showDialog(
       context: context,
@@ -93,18 +94,22 @@ class AddFloor extends StatelessWidget {
                     ),
                   ),
                   keyboardType: TextInputType.number, // Only numeric input
+                  onChanged: (value) {
+                    isError = value.isEmpty; // Set error flag if empty
+                  },
                 ),
                 const SizedBox(height: 20),
 
-                // Show error message if the input field is empty or invalid
-                if (_totalFloorsController.text.isEmpty)
-                  const Text(
-                    'Total floors cannot be empty!',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 14,
-                    ),
-                  ),
+                // Show error message if the input field is empty
+                isError
+                    ? const Text(
+                        'Total floors cannot be empty!',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
 
                 // Action buttons (Cancel and Submit)
                 Row(
@@ -126,8 +131,14 @@ class AddFloor extends StatelessWidget {
                     // Submit Button
                     ElevatedButton(
                       onPressed: () {
-                        controller.addFloor();
-                        Navigator.of(context).pop();
+                        if (_totalFloorsController.text.isNotEmpty) {
+                          controller.totalfloors.value = _totalFloorsController.text;
+                          controller.addFloor(); // Add floor
+                          Navigator.of(context).pop(); // Close dialog
+                        } else {
+                          // If the input is empty, show the error
+                          isError = true;
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).primaryColor,
@@ -146,4 +157,4 @@ class AddFloor extends StatelessWidget {
       },
     );
   }
-}
+

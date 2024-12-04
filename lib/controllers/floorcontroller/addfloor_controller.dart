@@ -22,24 +22,29 @@ class AddFloorController extends GetxController {
   }
 
 
+  // Fetch the floors data from the API
   Future<void> fetchFloors() async {
     isLoading.value = true;
+    update(); // Trigger rebuild to show the loading indicator
+
     try {
       final response = await DioServices.get(AppConstant.addFloor('1'));
       if (response.statusCode == 200) {
         floorlist.value = (response.data as List)
             .map((json) => Floor.fromJson(json))
             .toList();
-            update();
+        update(); // Trigger rebuild with new data
       } else {
-        Get.snackbar("Error", "Failed to fetch properties: ${response.statusCode}");
+        Get.snackbar("Error", "Failed to fetch floors: ${response.statusCode}");
       }
     } catch (error) {
       Get.snackbar("Exception", "Something went wrong: $error");
     } finally {
       isLoading.value = false;
+      update(); // Trigger rebuild to hide the loading indicator
     }
-  }  
+  }
+
 
 addFloor() async {
   // Check if total floors is valid
@@ -48,27 +53,29 @@ addFloor() async {
     return;
   }
 
-  // Try parsing the string to an integer
-  final totalFloorsInt = int.tryParse(totalfloors.value);
+addFloor() async {
+  if (totalfloors.value.isEmpty) {
+    snackBar("Error", "Total floors cannot be empty");
+    return;
+  }
 
-  // Check if the parsing was successful
+  final totalFloorsInt = int.tryParse(totalfloors.value);
   if (totalFloorsInt == null) {
     snackBar("Error", "Total floors must be a valid number");
     return;
   }
 
-  // Start loading indicator
   isLoading.value = true;
 
   try {
-    // Make the API call, passing the parsed integer value
     final response = await DioServices.postRequest(AppConstant.addFloor('1'), {
-      "total_floors": totalFloorsInt,  // Pass the integer value
+      "total_floors": totalFloorsInt,
     });
 
-    // Check if the response is successful
     if (response.statusCode == 200) {
       snackBar("Success", response.data["message"]);
+      // Optionally, fetch updated floor data after adding a new floor
+      fetchFloors();
     } else {
       snackBar("Error", "Failed to add floor: ${response.data['message'] ?? 'Unknown error'}");
     }
@@ -76,14 +83,11 @@ addFloor() async {
     debugPrint(e.toString());
     snackBar("Error", "An error occurred: $e");
   } finally {
-    // Stop loading indicator
     isLoading.value = false;
   }
 }
 
-
-
-
+}
 
 
 }
