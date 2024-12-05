@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg/controllers/propertycontroller/room_controller.dart';
+import 'package:pg/controllers/tenantscontroller/tenants_controller.dart';
+import 'package:pg/models/tenants/add_tenants.dart';
 import 'package:pg/views/pages/Building/room/add_room_form.dart';
 import 'package:pg/views/widgets/cards/feature_card.dart';
 import 'package:pg/views/widgets/room_card.dart';
@@ -11,6 +13,7 @@ class RoomsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
       final roomController= Get.put(RoomController());
+        
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -161,6 +164,7 @@ class RoomsScreen extends StatelessWidget {
   }
 
  Widget _buildRoomList() {
+  final tenantController= Get.put(AddTenantsController());
   return GetBuilder<RoomController>(
     builder: (roomController) {
       if (roomController.rooms.isEmpty) {
@@ -188,6 +192,25 @@ class RoomsScreen extends StatelessWidget {
                 },
                 onAddTenant: () {
                   // Handle add tenant action
+                  print("pressed");
+                    tenantController.createTenant(
+              AddTenant(
+                name: "john",
+                phone: "9876543567",
+                altphone: "3683832738273", 
+                buildingId: 1,
+                roomId: 1,
+                unitType: "2",
+                floor: "1", 
+                sharingType: "double", 
+                dailyStayChargesMin: 500, 
+                dailyStayChargesMax: 600, 
+                isRoomAvailable:true, 
+                electricityReadingLast: 50, 
+                electricityReadingDate: new DateTime.now(), 
+                roomPhotos: "url/photo"
+                     ));
+                
                 },
               ),
             );

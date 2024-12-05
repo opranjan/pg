@@ -102,9 +102,7 @@ Widget roomCardWidget({
                 ),
               ),
               ElevatedButton(
-                onPressed: (){
-                   Get.to(AddRoomForm());
-                },
+                onPressed: onAddTenant,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).primaryColor, // Use primary color from theme
                   shape: RoundedRectangleBorder(
