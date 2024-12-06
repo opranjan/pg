@@ -4,6 +4,7 @@ import 'package:pg/controllers/propertycontroller/new_property_form_controller.d
 import 'package:pg/views/pages/Building/dashboard/add_building_modal.dart';
 import 'package:pg/views/widgets/building/build_building_featurecard.dart';
 import 'package:pg/views/widgets/building/property_layout.dart';
+import 'package:pg/views/widgets/cards/feature_card.dart';
 import 'package:pg/views/widgets/custom_button.dart';
 
 class PropertyDashboard extends StatelessWidget {
@@ -103,31 +104,26 @@ class PropertyDashboard extends StatelessWidget {
   // Building overview widget (horizontal list)
   Widget _buildBuildingOverview() {
     // Example data for the horizontal list
-    final List<Map<String, String>> items = [
-      {"title": "Today's Collections", "data": "200"},
-      {"title": "November Collections", "data": "300"},
-      {"title": "November Dues", "data": "4000"},
-      {"title": "Total Dues", "data": "7500"},
-      {"title": "November Expenses", "data": "50"},
-      {"title": "Rent Defaulters", "data": "300"},
-      {"title": "Current Deposit", "data": "200"},
-      {"title": "Unpaid Deposit", "data": "300"},
-      {"title": "November Profit", "data": "400"},
-      {"title": "Potential Rent", "data": "600"},
+    final List<Map<String, dynamic>> items = [
+      {"title": "Total properties", "data": "200", "icon":Icons.apartment},
+      {"title": "Total Room", "data": "300", "icon":Icons.bed},
+      {"title": "Total Bookings", "data": "N/A", "icon":Icons.group},
     ];
 
     return Container(
       height: 130,
+      padding: EdgeInsets.all(10),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: items.length,
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: buildBuildingFeatureCard(
-              icon: Icons.currency_rupee,
+            padding: const EdgeInsets.all(5.0),
+            child: featureCard(
+              icon: items[index]['icon'],
               title: items[index]["title"]!,
               data: items[index]["data"]!,
+               iconColor: Colors.grey,
             ),
           );
         },

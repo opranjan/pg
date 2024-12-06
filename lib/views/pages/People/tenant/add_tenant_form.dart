@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg/controllers/tenantscontroller/tenants_controller.dart';
+import 'package:pg/models/tenants/add_tenants.dart';
 import 'package:pg/views/widgets/app_bar.dart';
 import 'package:pg/views/widgets/custom_button.dart';
 
@@ -33,6 +34,18 @@ class AddTenantForm extends StatelessWidget {
                 _buildTextField(
                   label: "Phone",
                   onChanged: controller.setTenantPhone,
+                  keyboardType: TextInputType.phone,
+                  validator: (value) =>
+                      value!.isEmpty ? "Phone number cannot be empty" : null,
+                ),
+
+                const SizedBox(height: 16),
+
+
+                 // Tenant Phone
+                _buildTextField(
+                  label: "Alternate Phone",
+                  onChanged: controller.setTenantAltPhone,
                   keyboardType: TextInputType.phone,
                   validator: (value) =>
                       value!.isEmpty ? "Phone number cannot be empty" : null,
@@ -105,6 +118,26 @@ class AddTenantForm extends StatelessWidget {
                     onPressed: () {
                       if (controller.isFormValid.value) {
                         // Handle submit logic here, e.g., saving data
+
+                        print("${controller.tenantName} ${controller.tenantPhone} ${controller.tenantAltPhone}  ${controller.selectedFloor} ${controller.selectedRoom}  ${controller.rent}  ${controller.securityDeposit}");
+                        
+                                 controller.createTenant(
+              AddTenant(
+                name: controller.tenantName.value,
+                phone: "${controller.tenantPhone}",
+                altphone: "${controller.tenantAltPhone}",
+                buildingId: 1,
+                roomId: controller.selectedRoom.value,
+                unitType: "Single",
+                floor: "${ controller.selectedRoom.value}", 
+                sharingType: "Double", 
+                dailyStayChargesMin: 500, 
+                dailyStayChargesMax: 600, 
+                isRoomAvailable:true, 
+                electricityReadingLast: 150, 
+                electricityReadingDate:'2024-11-27', 
+                roomPhotos: "url/photo"
+                     ));
                         Get.snackbar('Form Submitted', 'Tenant Added Successfully');
                       } else {
                         Get.snackbar('Error', 'Please fill all required fields correctly');

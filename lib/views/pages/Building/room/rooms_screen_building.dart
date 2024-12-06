@@ -20,7 +20,7 @@ class RoomsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildTrainInformationServices(),
+            // _buildTrainInformationServices(),
             const SizedBox(height: 20),
 
 
@@ -183,7 +183,7 @@ class RoomsScreen extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 16.0),
               child: roomCardWidget(
                 context: context,
-                title: 'No Title',
+                title: room.name.toString(),
                 beds: room.capacity ?? 0,
                 pricePerBed: room.price??"",
                 roomType: room.unitType ?? 'N/A',

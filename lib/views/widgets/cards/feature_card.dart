@@ -50,10 +50,10 @@ Widget featureCard({
             children: [
               Expanded(
                 child: Text(
-                  title,
+                   title.length > 5 ? title.substring(0, 5) + '\n' + title.substring(5) : title,
                   textAlign: TextAlign.left,
                   style: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),

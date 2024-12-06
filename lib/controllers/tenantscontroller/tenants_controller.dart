@@ -18,6 +18,7 @@ class AddTenantsController extends GetxController {
      // Reactive variables to hold form data
   var tenantName = ''.obs;
   var tenantPhone = ''.obs;
+   var tenantAltPhone = ''.obs;
   var selectedFloor = 1.obs;
   var selectedRoom = 1.obs;
   var rent = 0.0.obs;
@@ -85,6 +86,12 @@ class AddTenantsController extends GetxController {
 
   void setTenantPhone(String phone) {
     tenantPhone.value = phone;
+    updateFormValidity();
+  }
+
+
+    void setTenantAltPhone(String phone) {
+    tenantAltPhone.value = phone;
     updateFormValidity();
   }
 

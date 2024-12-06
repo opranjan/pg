@@ -1,15 +1,24 @@
+
 import 'package:get/get.dart';
 import 'package:pg/constants/app_constant.dart';
 import 'package:pg/models/room/add_room_model.dart';
 import 'package:pg/models/roommodels/room_model.dart';
 import 'package:pg/services/dio_services.dart';
+import 'package:pg/views/bottomnav_withcurve.dart';
 
 class RoomController extends GetxController {
   // Fields
+  String? roomName;
   String? unitType;
   String? floor;
   String? sharingType;
   String? isAvailable = "Yes";
+  String? roomrent;
+  String ?roomArea;
+  String ? maximumStayCharge;
+  String ? minimumStayCharge;
+  String ? remarks;
+  String ?lastaddedreading;
   DateTime? selectedDate;
   var isLoading = false.obs; // Loading state for API calls
    var rooms = <RoomModel>[].obs; // Observable list of properties
@@ -23,6 +32,12 @@ class RoomController extends GetxController {
     'Parking': false,
     'Laundry': false,
   };
+
+
+    void setRoomName(String value) {
+    roomName = value;
+    update();
+  }
 
   void setUnitType(String value) {
     unitType = value;
@@ -39,8 +54,44 @@ class RoomController extends GetxController {
     update();
   }
 
+
+    void setRoomRent(String value) {
+    roomrent = value;
+    update();
+  }
+
+
+   void setRoomMaximumStayCharge(String value) {
+    maximumStayCharge = value;
+    update();
+  }
+
+
+   void setRoomMinimumStayCharge(String value) {
+    minimumStayCharge = value;
+    update();
+  }
+
+
+     void setRoomArea(String value) {
+    roomArea = value;
+    update();
+  }
+
+
+
+    void setRemarks(String value) {
+    remarks = value;
+    update();
+  }
+
   void setAvailability(String value) {
     isAvailable = value;
+    update();
+  }
+
+  void setLastaddedreading(String value){
+    lastaddedreading = value;
     update();
   }
 
@@ -98,12 +149,13 @@ class RoomController extends GetxController {
         if (response.statusCode == 200) {
           Get.snackbar("Success", "User Added successfully",
               snackPosition: SnackPosition.BOTTOM);
-          // Get.to(() => StaffSettings());
-          fetchRooms();
+               fetchRooms();
+          Get.to(() => BottomNavBar());
+         
         } else {
           Map<String, dynamic> responseData = response.data;
-          Get.snackbar("Error", "${responseData['error']}",
-              snackPosition: SnackPosition.BOTTOM);
+          // Get.snackbar("Error", "${responseData['error']}",
+          //     snackPosition: SnackPosition.BOTTOM);
         }
      
     } catch (error) {

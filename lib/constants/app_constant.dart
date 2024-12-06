@@ -12,4 +12,5 @@ class AppConstant {
     // Endpoint for adding a floor to a specific building
   static String addroom(String floorNumber) => "floors/$floorNumber/rooms";
   static String tenants = "tenants";
+  static String propertyreports ="property-report";
 }
