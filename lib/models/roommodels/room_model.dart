@@ -1,61 +1,73 @@
 class RoomModel {
-  int? id;
-  int? floorId;
   int? capacity;
   String? price;
   int? availability;
   String? unitType;
   String? sharingType;
-  DateTime? deletedAt;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  int? laravelThroughKey;
+  String? name;
+  String? rent;
+  String? maximum;
+  String? minimum;
+  int? areaSqft;
+  String? remarks;
+  // List<String>? facilities;
+  dynamic lastReading;
+  String? date;
+  // List<String>? other;
 
-  RoomModel({
-    this.id,
-    this.floorId,
-    this.capacity,
-    this.price,
-    this.availability,
-    this.unitType,
-    this.sharingType,
-    this.deletedAt,
-    this.createdAt,
-    this.updatedAt,
-    this.laravelThroughKey,
-  });
+  RoomModel(
+      {this.capacity,
+      this.price,
+      this.availability,
+      this.unitType,
+      this.sharingType,
+      this.name,
+      this.rent,
+      this.maximum,
+      this.minimum,
+      this.areaSqft,
+      this.remarks,
+      // this.facilities,
+      this.lastReading,
+      this.date,
+      // this.other
+      });
 
-  // Factory method to create an instance from JSON
-  factory RoomModel.fromJson(Map<String, dynamic> json) {
-    return RoomModel(
-      id: json['id'],
-      floorId: json['floor_id'],
-      capacity: json['capacity'],
-      price: json['price'],
-      availability: json['availability'],
-      unitType: json['unit_type'],
-      sharingType: json['sharing_type'],
-      deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at']) : null,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
-      laravelThroughKey: json['laravel_through_key'],
-    );
+  RoomModel.fromJson(Map<String, dynamic> json) {
+    capacity = json['capacity'];
+    price = json['price'];
+    availability = json['availability'];
+    unitType = json['unit_type'];
+    sharingType = json['sharing_type'];
+    name = json['name'];
+    rent = json['rent'];
+    maximum = json['maximum'];
+    minimum = json['minimum'];
+    areaSqft = json['area_sqft'];
+    remarks = json['remarks'];
+    // facilities = json['facilities'].cast<String>();
+    lastReading = json['last_reading'];
+    date = json['date'];
+    // other = json['other'].cast<String>();
   }
 
-  // Method to convert an instance into JSON
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'floor_id': floorId,
-      'capacity': capacity,
-      'price': price,
-      'availability': availability,
-      'unit_type': unitType,
-      'sharing_type': sharingType,
-      'deleted_at': deletedAt?.toIso8601String(),
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
-      'laravel_through_key': laravelThroughKey,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['capacity'] = this.capacity;
+    data['price'] = this.price;
+    data['availability'] = this.availability;
+    data['unit_type'] = this.unitType;
+    data['sharing_type'] = this.sharingType;
+    data['name'] = this.name;
+    data['rent'] = this.rent;
+    data['maximum'] = this.maximum;
+    data['minimum'] = this.minimum;
+    data['area_sqft'] = this.areaSqft;
+    data['remarks'] = this.remarks;
+    // data['facilities'] = this.facilities;
+    data['last_reading'] = this.lastReading;
+    data['date'] = this.date;
+    // data['other'] = this.other;
+    return data;
   }
 }

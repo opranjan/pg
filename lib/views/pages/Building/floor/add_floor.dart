@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg/controllers/floorcontroller/addfloor_controller.dart';
-import 'package:pg/models/floor/floor_model.dart';
+
 
 class AddFloor extends StatelessWidget {
   const AddFloor({super.key});
@@ -24,14 +24,50 @@ class AddFloor extends StatelessWidget {
             itemCount: fc.floorlist.length,
             itemBuilder: (context, index) {
               final floor = fc.floorlist[index];
-              return ListTile(
-                title: Text(floor.floorNo.toString()), // Assuming `name` is a property of Floor model
-                // subtitle: Text('Floor ID: ${floor.id}'),
-                trailing: Icon(Icons.arrow_forward),
-                onTap: () {
-                  // Handle tap event, like showing floor details or editing
-                },
-              );
+              return Container(
+  padding: EdgeInsets.all(10),
+  decoration: BoxDecoration(
+    color: Colors.white, // Set a background color
+    borderRadius: BorderRadius.circular(12), // Rounded corners
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.1),
+        spreadRadius: 2,
+        blurRadius: 8,
+        offset: Offset(0, 2), // Shadow position
+      ),
+    ],
+  ),
+  child: ListTile(
+    contentPadding: EdgeInsets.zero, // Removes internal padding from the ListTile
+    title: Row(
+      children: [
+        Icon(
+          Icons.apartment,
+          color: Theme.of(context).primaryColor,
+          size: 28, // Increase icon size for better visibility
+        ),
+        SizedBox(width: 15),
+        Text(
+          "Floor : " + floor.id.toString(),
+          style: TextStyle(
+            fontSize: 16, // Slightly larger text for better readability
+            fontWeight: FontWeight.bold, // Bold text for emphasis
+          ),
+        ),
+      ],
+    ),
+    trailing: Icon(
+      Icons.arrow_circle_right,
+      color: Theme.of(context).primaryColor,
+      size: 28, // Matching the size of the icon
+    ),
+    onTap: () {
+      // Handle tap event, like showing floor details or editing
+    },
+  ),
+);
+
             },
           );
         },

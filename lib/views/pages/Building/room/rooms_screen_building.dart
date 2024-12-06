@@ -4,6 +4,7 @@ import 'package:pg/controllers/propertycontroller/room_controller.dart';
 import 'package:pg/controllers/tenantscontroller/tenants_controller.dart';
 import 'package:pg/models/tenants/add_tenants.dart';
 import 'package:pg/views/pages/Building/room/add_room_form.dart';
+import 'package:pg/views/pages/People/tenant/add_tenant_form.dart';
 import 'package:pg/views/widgets/cards/feature_card.dart';
 import 'package:pg/views/widgets/room_card.dart';
 
@@ -183,33 +184,35 @@ class RoomsScreen extends StatelessWidget {
               child: roomCardWidget(
                 context: context,
                 title: 'No Title',
-                beds: room.availability ?? 0,
-                pricePerBed: room.price ?? 'N/A',
+                beds: room.capacity ?? 0,
+                pricePerBed: room.price??"",
                 roomType: room.unitType ?? 'N/A',
-                availabilityStatus: room.availability.toString(),
+                availabilityStatus: room.availability.toString()=="1"?"Available":"Booked",
                 onShare: () {
                   // Handle share action
                 },
                 onAddTenant: () {
                   // Handle add tenant action
-                  print("pressed");
-                    tenantController.createTenant(
-              AddTenant(
-                name: "john",
-                phone: "9876543567",
-                altphone: "3683832738273", 
-                buildingId: 1,
-                roomId: 1,
-                unitType: "2",
-                floor: "1", 
-                sharingType: "double", 
-                dailyStayChargesMin: 500, 
-                dailyStayChargesMax: 600, 
-                isRoomAvailable:true, 
-                electricityReadingLast: 50, 
-                electricityReadingDate: new DateTime.now(), 
-                roomPhotos: "url/photo"
-                     ));
+
+                  Get.to(AddTenantForm());
+                
+              //       tenantController.createTenant(
+              // AddTenant(
+              //   name: "Akash",
+              //   phone: "9876543567",
+              //   altphone: "3683832738273", 
+              //   buildingId: 1,
+              //   roomId: 1,
+              //   unitType: "Single",
+              //   floor: "1", 
+              //   sharingType: "Double", 
+              //   dailyStayChargesMin: 500, 
+              //   dailyStayChargesMax: 600, 
+              //   isRoomAvailable:true, 
+              //   electricityReadingLast: 150, 
+              //   electricityReadingDate:'2024-11-27', 
+              //   roomPhotos: "url/photo"
+              //        ));
                 
                 },
               ),

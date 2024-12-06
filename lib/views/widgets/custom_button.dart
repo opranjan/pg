@@ -45,10 +45,13 @@ class CustomButton extends StatelessWidget {
           elevation: elevation ?? 2.0,
         ),
         child: icon == null
-            ? Text(
-                text,
-                style: textStyle ?? TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-              )
+            ? Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Text(
+                  text,
+                  style: textStyle ?? TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+            )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

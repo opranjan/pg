@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:intl/intl.dart';
+import 'package:pg/controllers/TenantController/TenantController.dart';
+import 'package:pg/controllers/tenantscontroller/tenants_controller.dart';
 import 'package:pg/views/widgets/cards/feature_card.dart';
 
 class TenantScreen extends StatelessWidget {
@@ -6,13 +11,18 @@ class TenantScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final tenants = Get.put(AddTenantsController());
+
+
+
     // List of tenants
-    final List<Map<String, String>> tenants = [
-      {"tenantName": "John Doe", "tenantDues": "10000", "duesDate": "20-11-24", "tenantRent": "6000"},
-      {"tenantName": "Jane Smith", "tenantDues": "8000", "duesDate": "22-11-24", "tenantRent": "5500"},
-      {"tenantName": "Michael Johnson", "tenantDues": "15000", "duesDate": "18-11-24", "tenantRent": "7000"},
-      {"tenantName": "Emily Davis", "tenantDues": "5000", "duesDate": "25-11-24", "tenantRent": "4500"},
-    ];
+    // final List<Map<String, String>> tenants = [
+    //   {"tenantName": "John Doe", "tenantDues": "10000", "duesDate": "20-11-24", "tenantRent": "6000"},
+    //   {"tenantName": "Jane Smith", "tenantDues": "8000", "duesDate": "22-11-24", "tenantRent": "5500"},
+    //   {"tenantName": "Michael Johnson", "tenantDues": "15000", "duesDate": "18-11-24", "tenantRent": "7000"},
+    //   {"tenantName": "Emily Davis", "tenantDues": "5000", "duesDate": "25-11-24", "tenantRent": "4500"},
+    // ];
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -96,18 +106,29 @@ class TenantScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Tenant Card List
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: tenants.length,
-              itemBuilder: (context, index) {
-                return tenantCard(
-                  tenantName: tenants[index]["tenantName"]!,
-                  tenantDues: tenants[index]["tenantDues"]!,
-                  duesDate: tenants[index]["duesDate"]!,
-                  tenantRent: tenants[index]["tenantRent"]!,
+            GetBuilder<AddTenantsController>(
+              builder: (tc) {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount:tc.tenantlist.length,
+                  itemBuilder: (context, index) {
+                   final tenants = tc.tenantlist[index];
+
+
+                    // Format the createdAt date to "dd-MM-yyyy"
+      final formattedDate = tenants.createdAt != null
+          ? DateFormat('dd-MM-yyyy').format(DateTime.parse(tenants.createdAt.toString()))
+          : 'N/A';
+                    return tenantCard(
+                      tenantName: tenants.name.toString(),
+                      tenantDues: tenants.altphone.toString(),
+                      duesDate:formattedDate,
+                      tenantRent: tenants.phone.toString(),
+                    );
+                  },
                 );
-              },
+              }
             ),
           ],
         ),

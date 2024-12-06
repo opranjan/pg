@@ -1,70 +1,68 @@
 class AddTenant {
-    AddTenant({
-        required this.name,
-        required this.phone,
-        required this.altphone,
-        required this.buildingId,
-        required this.roomId,
-        required this.unitType,
-        required this.floor,
-        required this.sharingType,
-        required this.dailyStayChargesMin,
-        required this.dailyStayChargesMax,
-        required this.isRoomAvailable,
-        required this.electricityReadingLast,
-        required this.electricityReadingDate,
-        required this.roomPhotos,
-    });
+  String? name;
+  String? phone;
+  String? altphone;
+  int? buildingId;
+  int? roomId;
+  String? unitType;
+  String? floor;
+  String? sharingType;
+  int? dailyStayChargesMin;
+  int? dailyStayChargesMax;
+  bool? isRoomAvailable;
+  double? electricityReadingLast;
+  String? electricityReadingDate;
+  String? roomPhotos;
 
-    final String? name;
-    final String? phone;
-    final String? altphone;
-    final int? buildingId;
-    final int? roomId;
-    final String? unitType;
-    final String? floor;
-    final String? sharingType;
-    final int? dailyStayChargesMin;
-    final int? dailyStayChargesMax;
-    final bool? isRoomAvailable;
-    final double? electricityReadingLast;
-    final DateTime? electricityReadingDate;
-    final String? roomPhotos;
+  AddTenant(
+      {this.name,
+      this.phone,
+      this.altphone,
+      this.buildingId,
+      this.roomId,
+      this.unitType,
+      this.floor,
+      this.sharingType,
+      this.dailyStayChargesMin,
+      this.dailyStayChargesMax,
+      this.isRoomAvailable,
+      this.electricityReadingLast,
+      this.electricityReadingDate,
+      this.roomPhotos});
 
-    factory AddTenant.fromJson(Map<String, dynamic> json){ 
-        return AddTenant(
-            name: json["name"],
-            phone: json["phone"],
-            altphone: json["altphone"],
-            buildingId: json["building_id"],
-            roomId: json["room_id"],
-            unitType: json["unit_type"],
-            floor: json["floor"],
-            sharingType: json["sharing_type"],
-            dailyStayChargesMin: json["daily_stay_charges_min"],
-            dailyStayChargesMax: json["daily_stay_charges_max"],
-            isRoomAvailable: json["is_room_available"],
-            electricityReadingLast: json["electricity_reading_last"],
-            electricityReadingDate: DateTime.tryParse(json["electricity_reading_date"] ?? ""),
-            roomPhotos: json["room_photos"],
-        );
-    }
+  AddTenant.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    phone = json['phone'];
+    altphone = json['altphone'];
+    buildingId = json['building_id'];
+    roomId = json['room_id'];
+    unitType = json['unit_type'];
+    floor = json['floor'];
+    sharingType = json['sharing_type'];
+    dailyStayChargesMin = json['daily_stay_charges_min'];
+    dailyStayChargesMax = json['daily_stay_charges_max'];
+    isRoomAvailable = json['is_room_available'];
+    electricityReadingLast = json['electricity_reading_last'];
+    electricityReadingDate = json['electricity_reading_date'];
+    roomPhotos = json['room_photos'];
+  }
 
-    Map<String, dynamic> toJson() => {
-        "name": name,
-        "phone": phone,
-        "altphone": altphone,
-        "building_id": buildingId,
-        "room_id": roomId,
-        "unit_type": unitType,
-        "floor": floor,
-        "sharing_type": sharingType,
-        "daily_stay_charges_min": dailyStayChargesMin,
-        "daily_stay_charges_max": dailyStayChargesMax,
-        "is_room_available": isRoomAvailable,
-        "electricity_reading_last": electricityReadingLast,
-        "electricity_reading_date": electricityReadingDate,
-        "room_photos": roomPhotos,
-    };
-
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['phone'] = this.phone;
+    data['altphone'] = this.altphone;
+    data['building_id'] = this.buildingId;
+    data['room_id'] = this.roomId;
+    data['unit_type'] = this.unitType;
+    data['floor'] = this.floor;
+    data['sharing_type'] = this.sharingType;
+    data['daily_stay_charges_min'] = this.dailyStayChargesMin;
+    data['daily_stay_charges_max'] = this.dailyStayChargesMax;
+    data['is_room_available'] = this.isRoomAvailable;
+    data['electricity_reading_last'] = this.electricityReadingLast;
+    data['electricity_reading_date'] = this.electricityReadingDate;
+    data['room_photos'] = this.roomPhotos;
+    return data;
+  }
 }

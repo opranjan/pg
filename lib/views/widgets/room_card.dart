@@ -6,7 +6,7 @@ Widget roomCardWidget({
   required BuildContext context, // Add BuildContext as a parameter
   required String title,
   required int beds,
-  required String pricePerBed,
+  required dynamic pricePerBed,
   required String roomType,
   required String availabilityStatus,
   required VoidCallback onShare,
@@ -54,7 +54,7 @@ Widget roomCardWidget({
               ),
               Spacer(),
               Text(
-                '₹$pricePerBed/bed',
+                '₹${pricePerBed}/bed',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
