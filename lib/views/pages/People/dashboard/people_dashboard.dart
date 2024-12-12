@@ -62,7 +62,7 @@ class PeopleDashboard extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final property = controller.properties[index];
                       return PropertyLayout(
-                        name: property.name,
+                        name: property.name.toString(),
                         propertyItems: [
                           PropertyItem(icon: Icons.bed, title: "Filled Beds", value: "0"),
                           PropertyItem(icon: Icons.bed_outlined, title: "Vacant Beds", value: "0"),

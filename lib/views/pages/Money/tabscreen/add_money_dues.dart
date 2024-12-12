@@ -8,24 +8,79 @@ class AddMoneyDues extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sample data for the cards
-    final List<Map<String, dynamic>> duesData = [
-      {
-        "icon": Icons.money,
-        "title": "Rent",
-        "fixedValue": "₹0.0 fixed",
-      },
-      {
-        "icon": Icons.bolt,
-        "title": "Electricity",
-        "fixedValue": "₹500 fixed",
-      },
-      {
-        "icon": Icons.water,
-        "title": "Water",
-        "fixedValue": "₹200 fixed",
-      },
-    ];
+  final List<Map<String, dynamic>> duesData = [
+  {
+    "icon": Icons.card_membership, // Joining fee might be represented by a membership card icon
+    "title": "Joining Fee",
+    "fixedValue": "₹0.0 fixed",
+  },
+  {
+    "icon": Icons.home, // Rent is better represented by a house/home icon
+    "title": "Rent",
+    "fixedValue": "₹500 fixed",
+  },
+  {
+    "icon": Icons.security, // Security bill should be represented by a security icon
+    "title": "Security Bill",
+    "fixedValue": "₹200 fixed",
+  },
+  {
+    "icon": Icons.flash_on, // Electricity bill can be represented by a lightning bolt icon
+    "title": "Electricity Bill",
+    "fixedValue": "₹200 fixed",
+  },
+  {
+    "icon": Icons.business, // Police verification could be represented by a business or verification icon
+    "title": "Police Verification",
+    "fixedValue": "₹200 fixed",
+  },
+  {
+    "icon": Icons.restaurant, // Mess is often associated with food, so restaurant or food icon works
+    "title": "Mess",
+    "fixedValue": "₹200 fixed",
+  },
+  {
+    "icon": Icons.warning, // Late fines are often associated with warnings or penalties
+    "title": "Late Fine",
+    "fixedValue": "₹200 fixed",
+  },
+  {
+    "icon": Icons.wifi, // Wifi is represented with a wifi icon
+    "title": "Wifi",
+    "fixedValue": "₹200 fixed",
+  },
+  {
+    "icon": Icons.build, // Maintenance bill is best represented by a build (construction) icon
+    "title": "Maintenance Bill",
+    "fixedValue": "₹200 fixed",
+  },
+  {
+    "icon": Icons.local_laundry_service, // Laundry bill can be represented by a laundry service icon
+    "title": "Laundry Bill",
+    "fixedValue": "₹200 fixed",
+  },
+  {
+    "icon": Icons.document_scanner, // Rent agreement charges can be associated with a document or agreement icon
+    "title": "Rent Agreement Charges",
+    "fixedValue": "₹200 fixed",
+  },
+  {
+    "icon": Icons.monetization_on, // 3 Month Rent Packages can be represented by a monetary icon
+    "title": "3 Month Rent Packages",
+    "fixedValue": "₹200 fixed",
+  },
+  {
+    "icon": Icons.monetization_on, // 6 Month Rent Package also uses the same icon (monetary)
+    "title": "6 Month Rent Package",
+    "fixedValue": "₹200 fixed",
+  },
+  {
+    "icon": Icons.category, // "Other" category can be represented by a generic category icon
+    "title": "Other",
+    "fixedValue": "₹200 fixed",
+  },
+];
+
 
     return Scaffold(
       appBar: AppBar(
@@ -35,12 +90,11 @@ class AddMoneyDues extends StatelessWidget {
         children: [
           // Search Bar
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal:5.0),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
                   blurRadius: 6,
                   spreadRadius: 2,
                 ),
@@ -70,11 +124,11 @@ class AddMoneyDues extends StatelessWidget {
           // List of AddDuesCards using ListView.builder
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 5),
               itemCount: duesData.length,
               itemBuilder: (context, index) {
                 final data = duesData[index];
                 return addDuesCard(
+                  context: context,
                   icon: data["icon"],
                   title: data["title"],
                   fixedValue: data["fixedValue"],

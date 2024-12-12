@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:get/get.dart';
 import 'package:pg/controllers/bottom_nav_controller.dart';
+import 'package:pg/controllers/floorcontroller/addfloor_controller.dart';
+import 'package:pg/controllers/propertycontroller/new_property_form_controller.dart';
 import 'package:pg/views/pages/Money/money_page.dart';
 import 'package:pg/views/pages/People/people_page.dart';
 import 'package:pg/views/pages/Building/building_page.dart';
 import 'package:pg/views/pages/home_page.dart';
 import 'package:pg/views/widgets/app_bar.dart';
 import 'package:pg/views/widgets/bottom_modal.dart';
+import 'package:pg/views/widgets/mainappbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override
@@ -35,16 +39,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(0)),
+
       ),
+
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       builder: (context) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: MediaQuery.of(context).size.height * 0.7,
           child: BottomModal(),
         );
       },
     );
   }
+
+
 
   // Helper function to create items with both icon and text
   Widget _bottomNavItem(IconData icon, String title) {
@@ -62,11 +71,22 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
+    final propertyController = Get.put(PropertyFormController());
+    
     return Scaffold(
-      appBar: commonAppBar(
+      appBar: mainAppBar(
         context,
-        "PG",
-        "Manager",
+        "Select Property",
+        titleObservable: propertyController.propertyNameObs,
+       isIcon: false,
+       onpress: ()async{
+        print("clicked..");
+          propertyController.fetchProperties();
+         
+
+          print("roomname ");
+          _openBottomModal();
+       }
       ),
       body: NotificationListener<ScrollStartNotification>(
         onNotification: (notification) {

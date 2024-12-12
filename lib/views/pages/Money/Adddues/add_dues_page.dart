@@ -27,7 +27,7 @@ class _AddDuesPageState extends State<AddDuesPage> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: commonAppBar(context, "Add Dues", ""),
+      appBar: commonAppBar(context, "Add Dues"),
       body: Column(
         children: [
           // TabBar for Room and Tenants

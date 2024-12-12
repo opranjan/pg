@@ -5,9 +5,11 @@ import 'package:pg/constants/app_constant.dart';
 import 'package:pg/constants/constant.dart';
 import 'package:pg/models/floor/floor_model.dart';
 import 'package:pg/services/dio_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddFloorController extends GetxController {
   RxString totalfloors = ''.obs; // Reactive variable
+  RxString currentFloorID = ''.obs;
 
   // Add loading state to indicate network request
   RxBool isLoading = false.obs;
@@ -24,11 +26,13 @@ class AddFloorController extends GetxController {
 
   // Fetch the floors data from the API
   Future<void> fetchFloors() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+     String? storedPropertyId = prefs.getString('selected_property_id');
     isLoading.value = true;
     update(); // Trigger rebuild to show the loading indicator
 
     try {
-      final response = await DioServices.get(AppConstant.addFloor('1'));
+      final response = await DioServices.get(AppConstant.addFloor(storedPropertyId.toString()));
       if (response.statusCode == 200) {
         floorlist.value = (response.data as List)
             .map((json) => Floor.fromJson(json))
@@ -49,6 +53,8 @@ class AddFloorController extends GetxController {
 
 
 addFloor() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+     String? storedPropertyId = prefs.getString('selected_property_id');
   if (totalfloors.value.isEmpty) {
     snackBar("Error", "Total floors cannot be empty");
     return;
@@ -63,7 +69,7 @@ addFloor() async {
   isLoading.value = true;
 
   try {
-    final response = await DioServices.postRequest(AppConstant.addFloor('1'), {
+    final response = await DioServices.postRequest(AppConstant.addFloor(storedPropertyId.toString()), {
       "total_floors": totalFloorsInt,
     });
 

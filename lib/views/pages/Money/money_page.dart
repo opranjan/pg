@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pg/views/pages/Money/collection/money_collection.dart';
 import 'package:pg/views/pages/Money/tabscreen/add_money_dues.dart';
+import 'package:pg/views/pages/Money/tabscreen/expansescreen.dart';
 import 'package:pg/views/pages/Money/tabscreen/money_dues.dart';
 import 'package:pg/views/pages/Money/tabscreen/money_overview.dart';
 import 'package:pg/views/pages/Building/room/rooms_screen_building.dart';
@@ -51,10 +52,11 @@ class _MoneyPageState extends State<MoneyPage> with SingleTickerProviderStateMix
                 controller: _tabController,
                 tabs: [
                   Tab(child: Text('Overview')),
-                  Tab(child: Text('Add Dues')),
                   Tab(child: Text('Dues')),
+                 
                   Tab(child: Text('Collection')),
-                  // Tab(child: Text('Expense')),
+                  Tab(child: Text('Expense')),
+                   Tab(child: Text('Add Dues')),
                   Tab(child: Text('Reports')),
                 ],
               ),
@@ -66,10 +68,10 @@ class _MoneyPageState extends State<MoneyPage> with SingleTickerProviderStateMix
               controller: _tabController,
               children: [
                 MoneyOverview(),
-                AddMoneyDues(),
                 MoneyDues(),
                 MoneyCollection(),
-                // FoodScreen(),
+                ExpanseScreen(),
+                AddMoneyDues(),
                 FoodScreen(),
               ],
             ),

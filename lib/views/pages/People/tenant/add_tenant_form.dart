@@ -11,7 +11,7 @@ class AddTenantForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: commonAppBar(context, "Add Tenant", ""),
+      appBar: commonAppBar(context, "Add Tenant", ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GetBuilder<AddTenantsController>(builder: (controller) {

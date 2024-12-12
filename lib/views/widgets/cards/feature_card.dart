@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
@@ -226,104 +227,219 @@ Widget moneyCard(
 }
 
 Widget duesCard({
+  required BuildContext context,
   required String tenantName,
   required String tenantDues,
   required String duesDate,
 }) {
   return Padding(
-    padding:  EdgeInsets.all(10.0),
+    padding: EdgeInsets.all(10),
     child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15), // Rounded corners
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3), // Light shadow
-            blurRadius: 10, // Soft shadow effect
-            spreadRadius: 3,
-            offset: Offset(0, 1), // Slightly downward shadow
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Row with Icon and Title
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                tenantName,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold, // Bold title for emphasis
+                  color: Colors.black87, // Text color
+                ),
+              ),
+              const SizedBox(width: 10), // Space between icon and text
+              Text(
+                tenantDues,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold, // Bold title for emphasis
+                  color: Colors.red, // Text color
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Padding(
-        padding:  EdgeInsets.all(15.0), // Padding inside the card
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Row with Icon and Title
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  tenantName,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold, // Bold title for emphasis
-                    color: Colors.black87, // Text color
-                  ),
-                ),
-                const SizedBox(width: 10), // Space between icon and text
-                Text(
-                  tenantDues,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold, // Bold title for emphasis
-                    color: Colors.black87, // Text color
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 15), // Spacing between rows
-
-            // Row with fixed value and button
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.bed),
-                    Text(
-                      "Smart",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight:
-                            FontWeight.w600, // Slightly bold for emphasis
-                        color: Colors.grey[700], // Dark grey color for contrast
-                      ),
-                    ),
-                  ],
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Add Dues",
+          const SizedBox(height: 15), // Spacing between rows
+          
+          // Row with fixed value and button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.bed),
+                  Text(
+                    "Smart",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight:
-                          FontWeight.w500, // Slightly less bold for the button
-                      color: Colors.blueAccent, // Button text color
+                          FontWeight.w600, // Slightly bold for emphasis
+                      color: Colors.grey[700], // Dark grey color for contrast
                     ),
-                    
-                    
                   ),
+                ],
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  "Add Dues",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight:
+                        FontWeight.w500, // Slightly less bold for the button
+                    color: Colors.blueAccent, // Button text color
+                  ),
+                  
+                  
                 ),
-              ],
+              ),
+            ],
+          ),
+          
+          Divider(),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+          // Record Payment Button
+          TextButton(
+            onPressed: () {},
+            style: TextButton.styleFrom(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Padding for a larger button
+            
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8), // Rounded corners
+      ),
+      side: BorderSide(
+        color: Theme.of(context).primaryColor,
+        width: 2, // Border width
+      ),
             ),
-
-            Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(onPressed: () {}, child: Text("Record Payment")),
-                TextButton(onPressed: () {}, child: Text("Remind To Pay")),
-              ],
-            )
-          ],
-        ),
+            child: Text(
+      "Record Payment",
+      style: TextStyle(
+        color: Theme.of(context).primaryColor, // Text color
+        fontWeight: FontWeight.bold, // Bold text
+        fontSize: 12, // Text size
+      ),
+            ),
+          ),
+          
+          // Remind To Pay Button
+          TextButton(
+            onPressed: () {},
+            style: TextButton.styleFrom(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      side: BorderSide(
+        color: Theme.of(context).primaryColor,
+        width: 2,
+      ),
+            ),
+            child: Text(
+      "Remind To Pay",
+      style: TextStyle(
+        color: Theme.of(context).primaryColor,
+        fontWeight: FontWeight.bold,
+        fontSize: 12,
+      ),
+            ),
+          ),
+            ],
+          )
+          
+        ],
       ),
     ),
   );
 }
+
+
+
+
+
+
+
+Widget expanseCard({
+  required BuildContext context,
+  required String description,
+  required String expanseamount,
+  required String paymentmethod,
+   required String paidby,
+    required String paidto,
+}) {
+  return Container(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Row with Icon and Title
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.shopping_bag),
+                  SizedBox(width: 10,),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold, // Bold title for emphasis
+                      color: Colors.black87, // Text color
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 10), // Space between icon and text
+              Text(
+                expanseamount,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold, // Bold title for emphasis
+                  color: Colors.red, // Text color
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 5), // Spacing between rows
+        
+        // Row with fixed value and button
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+             Text(""),
+              
+              Text(paymentmethod)
+            ],
+          ),
+        ),
+        
+        Divider(),
+      Padding(
+        padding: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(paidby)   ,
+              Text(paidto)
+            ],
+          ),
+      )
+        
+      ],
+    ),
+  );
+}
+
 
 
 
@@ -476,72 +592,82 @@ Widget addDuesCard({
   required String title,
   required String fixedValue,
   required VoidCallback onButtonPressed,
+  required BuildContext context,
 }) {
   return Padding(
-    padding: const EdgeInsets.all(10.0),
+    padding: const EdgeInsets.all(10.0), // Increased padding for better spacing
     child: Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15), // Rounded corners
+        borderRadius: BorderRadius.circular(15), // Rounded corners for the card
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3), // Light shadow
-            blurRadius: 10, // Soft shadow effect
-            spreadRadius: 3,
-           
+            color: Colors.grey.withOpacity(0.15), // Soft shadow for depth
+            blurRadius: 8, // Softer, more spread-out shadow
+            spreadRadius: 2, // Slightly larger spread for better effect
           ),
         ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(15.0), // Padding inside the card
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // Row with Icon and Title
             Row(
               children: [
                 Icon(
                   icon,
-                  color: Colors.green, // Icon color for visual appeal
-                  size: 30, // Slightly larger icon
+                  color: Theme.of(context).primaryColor,
+                  size: 25, // Slightly larger icon for better visibility
                 ),
-                const SizedBox(width: 10), // Space between icon and text
+                const SizedBox(width: 15), // Space between icon and text
                 Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold, // Bold title for emphasis
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600, // Slightly bolder title
                     color: Colors.black87, // Text color
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 15), // Spacing between rows
 
-            // Row with fixed value and button
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  fixedValue,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600, // Slightly bold for emphasis
-                    color: Colors.grey[700], // Dark grey color for contrast
+            // Attractive Button with Icon and Text
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 1, color: Theme.of(context).primaryColor),
+                borderRadius: BorderRadius.circular(10), // Rounded corners for button
+              ),
+              child: TextButton(
+                onPressed: onButtonPressed,
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30), // Make button rounder
                   ),
+                
                 ),
-                TextButton(
-                  onPressed: onButtonPressed,
-                  child: const Text(
-                    "Add Dues",
-                    style:  TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500, // Slightly less bold for the button
-                      color: Colors.blueAccent, // Button text color
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add,
+                      color: Theme.of(context).primaryColor, // Matching the icon color
+                      size: 16, // Smaller icon for balance
                     ),
-                  ),
+                    const SizedBox(width: 8), // Space between icon and text
+                    const Text(
+                      "Add Dues",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold, // Bold text for emphasis
+                        color: Colors.black87, // Text color
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ],
         ),
@@ -549,6 +675,7 @@ Widget addDuesCard({
     ),
   );
 }
+
 
 
 

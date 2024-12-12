@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:pg/controllers/duescontroller/dues_controller.dart';
+import 'package:pg/controllers/expansecontroller/expanse_controller.dart';
 import 'package:pg/views/widgets/cards/feature_card.dart';
 
-class MoneyDues extends StatelessWidget {
-  const MoneyDues({super.key});
+class ExpanseScreen extends StatelessWidget {
+  const ExpanseScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,23 +47,23 @@ class MoneyDues extends StatelessWidget {
           ),
 
           // Dues List using GetBuilder for DuesController
-          GetBuilder<DuesController>(
-            init: DuesController(),
+          GetBuilder<ExpanseController>(
+            init: ExpanseController(),
             builder: (controller) {
               if (controller.isLoading.value) {
                 return const Center(child: CircularProgressIndicator()); // Loading indicator
               }
 
-              if (controller.dueslist.isEmpty) {
+              if (controller.expanselist.isEmpty) {
                 return const Center(child: Text('No dues available'));
               }
 
               // List of dues
               return Expanded(
                 child: ListView.builder(
-                  itemCount: controller.dueslist.length,
+                  itemCount: controller.expanselist.length,
                   itemBuilder: (context, index) {
-                    final due = controller.dueslist[index]; // Get the due data
+                    final expanse = controller.expanselist[index]; // Get the due data
 
                     // Customize duesCard here (using actual data)
                     return Padding(
@@ -80,12 +81,14 @@ class MoneyDues extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: duesCard(
-                          context: context,
-                          tenantName: due.tenant.name,
-                          tenantDues: "₹${due.amount}",
-                          duesDate: due.date,
-                        ),
+                        child:expanseCard(
+                          context: context, 
+                          description: "${expanse.description}", 
+                          expanseamount: "₹ ${expanse.amount}", 
+                          paymentmethod: "${expanse.paymentMode}", 
+                          paidby: "Paid By :${expanse.paidBy}", 
+                          paidto: "Paid To :${expanse.paidTo}"
+                          )
                       ),
                     );
                   },

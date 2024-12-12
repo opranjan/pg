@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pg/controllers/propertycontroller/room_controller.dart';
 import 'package:pg/views/pages/Building/floor/add_floor.dart';
 import 'package:pg/views/pages/Building/dashboard/property_dashboard.dart';
 import 'package:pg/views/pages/Building/room/rooms_screen_building.dart';
@@ -12,18 +14,28 @@ class BuildingPage extends StatefulWidget {
 
 class _BuildingPageState extends State<BuildingPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final roomController = Get.put(RoomController());
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this); // 4 tabs
+    _tabController.addListener(_handleTabSelection);
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabSelection);
     _tabController.dispose();
     super.dispose();
   }
+
+  void _handleTabSelection() {
+    if (_tabController.index == 2) { // Index 2 corresponds to the "Rooms" tab
+     roomController. fetchRooms('1');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

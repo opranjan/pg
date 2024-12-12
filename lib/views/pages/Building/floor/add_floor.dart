@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg/controllers/floorcontroller/addfloor_controller.dart';
+import 'package:pg/controllers/propertycontroller/room_controller.dart';
+import 'package:pg/views/pages/Building/room/room_fllorwise_screen.dart';
 
 
 class AddFloor extends StatelessWidget {
@@ -39,6 +41,7 @@ class AddFloor extends StatelessWidget {
     ],
   ),
   child: ListTile(
+    
     contentPadding: EdgeInsets.zero, // Removes internal padding from the ListTile
     title: Row(
       children: [
@@ -64,6 +67,9 @@ class AddFloor extends StatelessWidget {
     ),
     onTap: () {
       // Handle tap event, like showing floor details or editing
+      final roomController =Get.put(RoomController());
+      roomController.fetchRooms(floor.id.toString());
+      Get.to(RoomFloorWise(floor_id: floor.id.toString(),));
     },
   ),
 );

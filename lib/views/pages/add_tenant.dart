@@ -12,7 +12,7 @@ class _AddTenantState extends State<AddTenant> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: commonAppBar(context, "Add Tenant", ""),
+      appBar: commonAppBar(context, "Add Tenant", ),
       body:  Center(
       child: Text("Add Tenant"),
     )

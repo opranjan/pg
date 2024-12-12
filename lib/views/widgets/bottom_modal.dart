@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pg/controllers/floorcontroller/addfloor_controller.dart';
+import 'package:pg/controllers/propertycontroller/new_property_form_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomModal extends StatelessWidget {
   @override
@@ -6,111 +10,173 @@ class BottomModal extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         top: 20,
-        left: 20,
-        right: 20,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 20, // Handle keyboard overlap
+        left: 10,
+        right: 10,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 20, // Adjust for keyboard
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Heading
-          Text(
-            'Explore PG',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 15),
-          
-          // Search Box
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Search...',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.search),
-            ),
-          ),
-          SizedBox(height: 20),
-
-          // Scrollable Area
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Quick Actions Section
-                  Text(
-                    'Quick Actions',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  
-                  // Admin Dashboard Action
-                  _buildActionItem(
-                    icon: Icons.dashboard,
-                    label: 'Admin Dashboard',
-                    onPressed: () {
-                      // Handle Admin Dashboard action
-                      Navigator.pop(context);  // Example action
-                    },
-                  ),
-                  SizedBox(height: 10),
-
-                  // Send Message Action
-                  _buildActionItem(
-                    icon: Icons.message,
-                    label: 'Send Message',
-                    onPressed: () {
-                      // Handle Send Message action
-                      Navigator.pop(context);  // Example action
-                    },
-                  ),
-                  SizedBox(height: 10),
-
-                  // Change Property Action
-                  _buildActionItem(
-                    icon: Icons.home_repair_service,
-                    label: 'Change Property',
-                    onPressed: () {
-                      // Handle Change Property action
-                      Navigator.pop(context);  // Example action
-                    },
-                  ),
-                  SizedBox(height: 10),
-
-                  // Invite Tenant Action
-                  _buildActionItem(
-                    icon: Icons.person_add,
-                    label: 'Invite Tenant',
-                    onPressed: () {
-                      // Handle Invite Tenant action
-                      Navigator.pop(context);  // Example action
-                    },
-                  ),
-                ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Switch Property',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
               ),
             ),
-          ),
-        ],
+            SizedBox(height: 15),
+
+            // Display the list of properties dynamically
+            GetBuilder<PropertyFormController>(
+              builder: (controller) {
+                if (controller.properties.isEmpty) {
+                  return Center(child: Text('No properties added yet.'));
+                } else {
+                  return ListView.builder(
+                    shrinkWrap: true, // Only take necessary space
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: controller.properties.length,
+                    itemBuilder: (context, index) {
+                      final property = controller.properties[index];
+
+                       // Calculate total rooms by summing rooms in all floors
+                      int totalRooms = property.floors.fold(0, (sum, floor) {
+                        return sum + (floor.totalRooms ?? 0);  // Handle null totalRooms safely
+                      });
+
+                      // Calculate available rooms (optional, use a similar approach)
+                      int availableRooms = property.floors.fold(0, (sum, floor) {
+                        return sum + (floor.rooms.where((room) => room.availability == 1).length);
+                      });
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: _buildActionItem(
+                          icon: Icons.home,
+                          propertyName: property.name.toString(),
+                          totalRoom: totalRooms.toString(),// Dynamic total rooms
+                          availableRoom:availableRooms.toString(), // Dynamic available rooms
+                          onPressed: () async {
+                            // Store selected property details in SharedPreferences
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            await prefs.setString('selected_property_id', property.id.toString());
+                            await prefs.setString('selected_property_name', property.name.toString());
+
+                            String? storedPropertyName = prefs.getString('selected_property_name');
+                            await controller.updatePropertyName(storedPropertyName ?? "");
+
+                            // Log selected property details
+                            print("Selected Property ID: ${property.id}");
+                            String? storedPropertyId = prefs.getString('selected_property_id');
+                            print("Stored Property ID from SharedPreferences: $storedPropertyId");
+
+                            // Trigger floor fetch from floor controller
+                            final floorController = Get.put(AddFloorController());
+                            floorController.fetchFloors();
+
+                            Navigator.pop(context); // Close the modal
+                          },
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  // Helper widget to build each action item with icon and label
-  Widget _buildActionItem({required IconData icon, required String label, required VoidCallback onPressed}) {
+  // Action item for each property
+  Widget _buildActionItem({
+    required IconData icon,
+    required String propertyName,
+    required String totalRoom,
+    required String availableRoom,
+    required VoidCallback onPressed,
+  }) {
     return InkWell(
       onTap: onPressed,
-      child: Row(
-        children: [
-          Icon(icon, size: 30, color: Colors.orange),
-          SizedBox(width: 10),
-          Text(
-            label,
-            style: TextStyle(fontSize: 16),
-          ),
-        ],
+      child: Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 250, 248, 248),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.home_outlined, size: 30, color: Colors.black),
+                    SizedBox(width: 12),
+                    Text(
+                      propertyName,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.grey,
+                  ),
+                  child: Text(
+                    "Current",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.bed_outlined, size: 30, color: Colors.black),
+                    SizedBox(width: 10),
+                    Text(
+                      "Total Rooms: ",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      totalRoom,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.bed_outlined, size: 30, color: Colors.black),
+                    SizedBox(width: 10),
+                    Text(
+                      "Available Rooms: ",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      availableRoom,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

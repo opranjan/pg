@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:pg/models/buildingmodels/fetchproperty.dart';
 import 'package:pg/models/buildingmodels/property.dart';
 import 'package:pg/services/dio_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PropertyFormController extends GetxController {
   // TextEditingController for each form field
@@ -12,33 +14,84 @@ class PropertyFormController extends GetxController {
 
   var isChecked = false.obs; // Checkbox state
   var isLoading = false.obs; // Loading state for API calls
-  var properties = <Property>[].obs; // Observable list of properties
+  //  var properties = <Property>[].obs; // Observable list of properties
+    var properties = <FetchProperty>[].obs; // Observable list of properties
+    var propertyNameObs = Rx<String?>(null); // Observable property name
+    // var propertylist = <FetchProperty>[].obs;
+
+  
 
   @override
-  void onInit() {
+  void onInit() async{
     super.onInit();
-    fetchProperties();
+     await fetchProperties();
+    await loadPropertyName(); // Load the stored property name
+
+  }
+
+
+  // Method to fetch the stored property name from SharedPreferences
+  Future<void> loadPropertyName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? storedName = prefs.getString('selected_property_name');
+    propertyNameObs.value = storedName; // Update the observable property name
+  }
+
+  // Method to save the updated property name to SharedPreferences
+  Future<void> updatePropertyName(String newName) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selected_property_name', newName); // Save updated name
+    propertyNameObs.value = newName; // Update the observable property name
   }
 
   // Fetch properties from the server
+  // Future<void> fetchProperties() async {
+  //   isLoading.value = true;
+  //   try {
+  //     final response = await DioServices.get("buildings");
+  //     if (response.statusCode == 200) {
+  //       properties.value = (response.data as List)
+  //           .map((json) => FetchProperty.fromJson(json))
+  //           .toList();
+  //           update();
+  //     } else {
+  //       Get.snackbar("Error", "Failed to fetch properties: ${response.statusCode}");
+  //     }
+  //   } catch (error) {
+  //     print("Something went wrong: $error");
+  //     Get.snackbar("Exception", "Something went wrong: $error");
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
+
+  // Fetch properties from the server
   Future<void> fetchProperties() async {
-    isLoading.value = true;
+    isLoading.value = true;  // Indicate that loading has started
+
     try {
-      final response = await DioServices.get("buildings");
+      final response = await DioServices.get("buildings");  // Replace with your actual API endpoint
       if (response.statusCode == 200) {
+        // Map the response to FetchProperty objects
         properties.value = (response.data as List)
-            .map((json) => Property.fromJson(json))
+            .map((json) => FetchProperty.fromJson(json))
             .toList();
-            update();
+
+        update();  // Update the UI after data is fetched
       } else {
+        // Handle the case when the status code is not 200
         Get.snackbar("Error", "Failed to fetch properties: ${response.statusCode}");
       }
     } catch (error) {
+      print("Something went wrong: $error");
+      // Display error message to the user
       Get.snackbar("Exception", "Something went wrong: $error");
     } finally {
+      // End the loading state regardless of success or failure
       isLoading.value = false;
     }
   }
+
 
 Future<void> createProperty() async {
   if (propertyName.text.isNotEmpty &&
@@ -48,8 +101,8 @@ Future<void> createProperty() async {
       isChecked.value) {
     final newProperty = {
       "name": propertyName.text,
-      "ownerName": ownerName.text,
-      "ownerPhone": ownerPhone.text,
+      "owner_name": ownerName.text,
+      "owner_phone": ownerPhone.text,
       "pincode": propertyPincode.text,
     };
 

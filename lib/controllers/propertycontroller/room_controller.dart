@@ -111,14 +111,14 @@ class RoomController extends GetxController {
     @override
   void onInit() {
     super.onInit();
-    fetchRooms();
+    fetchRooms('1');
   }
 
   // Fetch properties from the server
-  Future<void> fetchRooms() async {
+  Future<void> fetchRooms(floorid) async {
     isLoading.value = true;
     try {
-      final response = await DioServices.get("floors/1/rooms");
+      final response = await DioServices.get(AppConstant.addroom(floorid));
       if (response.statusCode == 200) {
         rooms.value = (response.data as List)
             .map((json) => RoomModel.fromJson(json))
@@ -149,7 +149,7 @@ class RoomController extends GetxController {
         if (response.statusCode == 200) {
           Get.snackbar("Success", "User Added successfully",
               snackPosition: SnackPosition.BOTTOM);
-               fetchRooms();
+               fetchRooms('1');
           Get.to(() => BottomNavBar());
          
         } else {

@@ -68,7 +68,7 @@ class PropertyDashboard extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final property = controller.properties[index];
                       return PropertyLayout(
-                        name: property.name,
+                        name: property.name.toString(),
                         propertyItems: [
                           PropertyItem(icon: Icons.bed, title: "Filled Beds", value: "0"),
                           PropertyItem(icon: Icons.bed_outlined, title: "Vacant Beds", value: "0"),
@@ -76,7 +76,7 @@ class PropertyDashboard extends StatelessWidget {
                           PropertyItem(icon: Icons.person, title: "Tenants", value: "0"),
                            PropertyItem(icon: Icons.currency_rupee, title: "Collections", value: "0"),
                             
-                             PropertyItem(icon: Icons.book, title: "Booking", value: "600"),
+                            //  PropertyItem(icon: Icons.book, title: "Booking", value: "600"),
                         ],
                       );
                     },

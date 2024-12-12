@@ -13,7 +13,7 @@ class AddRoomForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: commonAppBar(context, "Add Room Form", ""),
+      appBar: commonAppBar(context, "Add Room Form"),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Form(
