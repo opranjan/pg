@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pg/constants/api_service.dart';
+import 'package:pg/controllers/duescontroller/dues_controller.dart';
+import 'package:pg/controllers/propertycontroller/new_property_form_controller.dart';
+import 'package:pg/controllers/tenantscontroller/tenants_controller.dart';
 import 'package:pg/views/widgets/cards/feature_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,13 +12,72 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+   final propertyController = Get.put(PropertyFormController());
+   final tenantsController = Get.put(AddTenantsController());
+   final duesController  = Get.put(DuesController());
+
+
+
+   double totalAmount = 0;
+
+
+
+
+
+  final ApiService apiService = ApiService();
+  Map<String, dynamic>? overviewData;
+  bool isLoading = true;
+  String errorMessage = '';
+
+
   @override
   void initState() {
     super.initState();
+    duesController.fetchDues();
+
+    duesController.dueslist.map((element) => element.amount);
+
+    fetchBuildingOverview();
+    
   }
+
+
+
+
+
+    Future<void> fetchBuildingOverview() async {
+    try {
+      final data = await apiService.fetchOverview(propertyController.propertyNameObs.value.toString());
+      setState(() {
+        overviewData = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString();
+        isLoading = false;
+      });
+    }
+  }
+
+
+   // Sum all dues amounts
+  void calculateTotalAmount() {
+    totalAmount = duesController.dueslist.fold(0.0, (sum, item) => sum + (double.parse(item.amount) ?? 0.0));
+    setState(() {});
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
+      // Calculate total amount after dueslist is updated
+    if (duesController.dueslist.isNotEmpty) {
+      calculateTotalAmount();
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -57,6 +120,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
 
+
+                Text("Today Collection: ${overviewData!['today_collection']}"),
+
                Padding(
   padding: const EdgeInsets.all(8.0),
   child: Container(
@@ -91,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      _buildPropertyCardList(),
+                      _buildPropertyCardList(propertyController.properties.length.toString(), '0', '0'),
                     ],
                   ),
                 ),
@@ -111,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      _buildPeopleCardList(),
+                      _buildPeopleCardList(tenantsController.tenantlist.length.toString(), "1", "0"),
                     ],
                   ),
                 ),
@@ -131,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      _buildMoneyCardList(),
+                      _buildMoneyCardList("${overviewData!['today_collection']}", " ${overviewData!['monthly_collection']}", "${overviewData!['total_month_dues']}", "${overviewData!['past_total_dues']}"),
                     ],
                   ),
                 ),
@@ -143,31 +209,25 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildPropertyCardList() {
+  Widget _buildPropertyCardList(String totalProperties, String totalBookings, String totalPendingBooking) {
     // Example data for the horizontal list
      final List<Map<String, dynamic>> items = [
-    {"title": "Today's Collections", "data": "5000", "iconColor": Colors.green},
-    {"title": "November Collections", "data": "250000", "iconColor": Colors.green},
-    {"title": "November Dues", "data": "60000", "iconColor": Colors.red},
-    {"title": "Total Dues", "data": "7500", "iconColor": Colors.red},
-    {"title": "November Expenses", "data": "7500", "iconColor": Colors.orange},
-    {"title": "Rent Defaulters", "data": "7500", "iconColor": Colors.red},
-    {"title": "Current Deposit", "data": "7500", "iconColor": Colors.green},
-    {"title": "Unpaid Deposit", "data": "7500", "iconColor": Colors.red},
-    {"title": "November Profit", "data": "7500", "iconColor": Colors.orange},
-    {"title": "Potential Rent", "data": "7500", "iconColor": Colors.green},
+    {"title": "Total Properties", "data": totalProperties, "iconColor": Colors.blue,  "iconname":Icons.apartment},
+    {"title": "Total Bookings", "data": totalBookings, "iconColor": Colors.blue,  "iconname":Icons.apartment},
+    {"title": "Pending Bookings", "data": totalPendingBooking, "iconColor": Colors.red,  "iconname":Icons.apartment},
   ];
 
     return Container(
       height: 100,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
         itemCount: items.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(10),
             child: featureCard(
-              icon: Icons.currency_rupee,
+              icon:items[index]["iconname"]!,
               title: items[index]["title"]!,
               data: items[index]["data"]!,
               iconColor: items[index]['iconColor']
@@ -184,26 +244,25 @@ class _HomePageState extends State<HomePage> {
   // people overview
 
     // Building overview widget (horizontal list)
-  Widget _buildPeopleCardList() {
+  Widget _buildPeopleCardList(String totalTenants, String totalStaff, String totalExpense) {
   // Example data for the horizontal list
   final List<Map<String, dynamic>> items = [
-    {"title": "Total Tenants", "data": "0", "iconColor": Colors.blue},
-    {"title": "New Tenants", "data": "300", "iconColor": Colors.green},
-    {"title": "Under Notice", "data": "4000", "iconColor": Colors.red},
-    {"title": "Joining Requests", "data": "7500", "iconColor": Colors.orange},
-    {"title": "Contact Not Added", "data": "50", "iconColor": Colors.orange},
+    {"title": "Total Tenants", "data": totalTenants, "iconColor": Colors.blue, "iconname":Icons.person},
+    {"title": "Total Team/ Staff", "data": totalStaff, "iconColor": Colors.green,"iconname":Icons.person},
+    {"title": "Expense", "data": totalExpense, "iconColor": Colors.red,"iconname":Icons.currency_exchange},
   ];
 
   return Container(
     height: 100,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
+      shrinkWrap: true,
       itemCount: items.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.all(10.0),
           child: featureCard(
-            icon: Icons.currency_rupee,
+            icon: items[index]['iconname'],
             title: items[index]["title"]!,
             data: items[index]["data"]!,
             iconColor: items[index]["iconColor"], // Ensure the correct key is used here
@@ -218,33 +277,26 @@ class _HomePageState extends State<HomePage> {
 
 
 
-  Widget _buildMoneyCardList() {
+  Widget _buildMoneyCardList(String todayCollection, String monthCollection, String totalDues, String monthDues) {
     // Example data for the horizontal list
     final List<Map<String, dynamic>> items = [
-      {"title": "Total Dues", "data": "5000", "iconColor": Colors.red},
-      {"title": "Overdue Dues", "data": "250000", "iconColor": Colors.red},
-      {"title": "November Dues", "data": "60000", "iconColor": Colors.red},
-      {"title": "November Rent Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "November Electricity Bill Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "November Cash Deposits Due", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Unpaid Rent", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Electricity Bill Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Future Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Late Fine Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Short Term Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Long Term Dues", "data": "7500", "iconColor": Colors.red},
+      {"title": "Today's Collection", "data": todayCollection, "iconColor": Colors.green,  "iconname":Icons.currency_rupee},
+      {"title": "Month Collection ", "data": monthCollection, "iconColor": Colors.green, "iconname":Icons.currency_rupee},
+      {"title": "Total Dues", "data": totalDues, "iconColor": Colors.red, "iconname":Icons.currency_rupee},
+      {"title": "Month Dues", "data": monthDues, "iconColor": Colors.red, "iconname":Icons.currency_rupee},
     ];
 
     return Container(
       height: 100,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
         itemCount: items.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(10),
             child: featureCard(
-              icon: Icons.currency_rupee,
+              icon: items[index]['iconname'],
               title: items[index]["title"]!,
               data: items[index]["data"]!,
                iconColor: items[index]["iconColor"],

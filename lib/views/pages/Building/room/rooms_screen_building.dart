@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pg/controllers/floorcontroller/addfloor_controller.dart';
 import 'package:pg/controllers/propertycontroller/room_controller.dart';
 import 'package:pg/controllers/tenantscontroller/tenants_controller.dart';
-import 'package:pg/models/tenants/add_tenants.dart';
 import 'package:pg/views/pages/Building/room/add_room_form.dart';
 import 'package:pg/views/pages/People/tenant/add_tenant_form.dart';
 import 'package:pg/views/widgets/cards/feature_card.dart';
@@ -14,102 +14,106 @@ class RoomsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
       final roomController= Get.put(RoomController());
+     
         
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // _buildTrainInformationServices(),
-            const SizedBox(height: 20),
-
-
-            // Updated search bar with filter icon on the right
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Search Bar Container
-                  Expanded(
-                    child: Container(
-                      
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Search Properties',
-                          hintText: 'Enter search term',
-                          prefixIcon: const Icon(Icons.search),
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.filter_list),
-                            onPressed: () {
-                              // handle filter button action
-                            },
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
+        child: Container(
+          color: Colors.white38,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // _buildTrainInformationServices(),
+              const SizedBox(height: 20),
+          
+          
+              // Updated search bar with filter icon on the right
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Search Bar Container
+                    Expanded(
+                      child: Container(
+                        
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                            ),
+                          ],
                         ),
-                        onChanged: (value) {
-                          // handle search
-                        },
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: 'Search Properties',
+                            hintText: 'Enter search term',
+                            prefixIcon: const Icon(Icons.search),
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.filter_list),
+                              onPressed: () {
+                                // handle filter button action
+                              },
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                          onChanged: (value) {
+                            // handle search
+                          },
+                        ),
                       ),
                     ),
-                  ),
-              
-                    const SizedBox(width: 5),
-              
-                  // "More" Button
-                  ElevatedButton(
-                    onPressed: () {},
-                     style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.deepPurple,
-                               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10), 
-                              ),
-                              shadowColor: Colors.deepPurpleAccent.withOpacity(0.3), 
-                              elevation: 5,
-              
-                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Text("More", style: TextStyle(fontSize: 10),),
-                    ),
+                
+                      const SizedBox(width: 5),
+                
+                    // "More" Button
+                    ElevatedButton(
+                      onPressed: () {},
+                       style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.deepPurple,
+                                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10), 
+                                ),
+                                shadowColor: Colors.deepPurpleAccent.withOpacity(0.3), 
+                                elevation: 5,
+                
+                       ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: const Text("More", style: TextStyle(fontSize: 10),),
+                      ),
+                      
                     
-                  
-                      )        ],
+                        )        ],
+                ),
               ),
-            ),
-
-            const SizedBox(height: 20),
-
-
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                "Available Rooms",
-                style: Theme.of(context).textTheme.headline6,
+          
+              const SizedBox(height: 20),
+          
+          
+          
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  "Available Rooms",
+                  style: Theme.of(context).textTheme.headline6,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            _buildRoomList(),
-          ],
+              const SizedBox(height: 10),
+              _buildRoomList(),
+            ],
+          ),
         ),
       ),
 
@@ -166,6 +170,7 @@ class RoomsScreen extends StatelessWidget {
 
  Widget _buildRoomList() {
   final tenantController= Get.put(AddTenantsController());
+   final floorController = Get.put(AddFloorController());
   return GetBuilder<RoomController>(
     builder: (roomController) {
       if (roomController.rooms.isEmpty) {
@@ -193,26 +198,8 @@ class RoomsScreen extends StatelessWidget {
                 },
                 onAddTenant: () {
                   // Handle add tenant action
-
+                  floorController.fetchFloors();
                   Get.to(AddTenantForm());
-                
-              //       tenantController.createTenant(
-              // AddTenant(
-              //   name: "Akash",
-              //   phone: "9876543567",
-              //   altphone: "3683832738273", 
-              //   buildingId: 1,
-              //   roomId: 1,
-              //   unitType: "Single",
-              //   floor: "1", 
-              //   sharingType: "Double", 
-              //   dailyStayChargesMin: 500, 
-              //   dailyStayChargesMax: 600, 
-              //   isRoomAvailable:true, 
-              //   electricityReadingLast: 150, 
-              //   electricityReadingDate:'2024-11-27', 
-              //   roomPhotos: "url/photo"
-              //        ));
                 
                 },
               ),

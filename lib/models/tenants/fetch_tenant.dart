@@ -3,6 +3,7 @@ class TenantModel {
   String? name;
   String? phone;
   String? altphone;
+  int? buildingId;
   String? createdAt;
   String? updatedAt;
   List<StayDetails>? stayDetails;
@@ -14,6 +15,7 @@ class TenantModel {
       this.phone,
       this.altphone,
       this.createdAt,
+      this.buildingId,
       this.updatedAt,
       this.stayDetails,
       this.paymentDetails});
@@ -23,6 +25,7 @@ class TenantModel {
     name = json['name'];
     phone = json['phone'];
     altphone = json['altphone'];
+    buildingId=json['building_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     if (json['stay_details'] != null) {
@@ -45,6 +48,7 @@ class TenantModel {
     data['name'] = this.name;
     data['phone'] = this.phone;
     data['altphone'] = this.altphone;
+    data['building_id'] = this.buildingId;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     if (this.stayDetails != null) {

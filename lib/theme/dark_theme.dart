@@ -15,7 +15,7 @@ ThemeData dark = ThemeData(
     color: Color.fromARGB(255, 19, 2, 93), // Icon color matches primary color
   ),
   textTheme: const TextTheme(
-    bodyText1: TextStyle(color: Color(0xFFCAD2E2)), // Soft, readable text
+    bodyText1: TextStyle(color: Color(0xFFFFFFFF)), // Soft, readable text
     bodyText2: TextStyle(color: Color(0xFFB0BEC5)), // Secondary text color
     headline6: TextStyle(color: Color(0xFF64B5F6)), // Light blue for headlines
   ),

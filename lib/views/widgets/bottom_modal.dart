@@ -51,13 +51,15 @@ class BottomModal extends StatelessWidget {
                       int availableRooms = property.floors.fold(0, (sum, floor) {
                         return sum + (floor.rooms.where((room) => room.availability == 1).length);
                       });
+
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: _buildActionItem(
                           icon: Icons.home,
                           propertyName: property.name.toString(),
-                          totalRoom: totalRooms.toString(),// Dynamic total rooms
-                          availableRoom:availableRooms.toString(), // Dynamic available rooms
+                          totalRoom: totalRooms.toString(), // Dynamic total rooms
+                          availableRoom: availableRooms.toString(), // Dynamic available rooms
+                          propertyId: property.id, // Pass the property ID
                           onPressed: () async {
                             // Store selected property details in SharedPreferences
                             SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -97,87 +99,119 @@ class BottomModal extends StatelessWidget {
     required String propertyName,
     required String totalRoom,
     required String availableRoom,
+    required int propertyId,
     required VoidCallback onPressed,
   }) {
-    return InkWell(
-      onTap: onPressed,
-      child: Container(
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 250, 248, 248),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.home_outlined, size: 30, color: Colors.black),
-                    SizedBox(width: 12),
-                    Text(
-                      propertyName,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.grey,
-                  ),
-                  child: Text(
-                    "Current",
-                    style: TextStyle(color: Colors.black),
-                  ),
+    return FutureBuilder<String?>(
+      future: _getSelectedPropertyId(), // Fetch the selected property ID from SharedPreferences
+      builder: (context, snapshot) {
+        bool isSelected = false;
+
+        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+          String? selectedPropertyId = snapshot.data;
+          isSelected = selectedPropertyId == propertyId.toString();
+        }
+
+        return InkWell(
+          onTap: onPressed,
+          child: Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 250, 248, 248),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 4,
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.bed_outlined, size: 30, color: Colors.black),
-                    SizedBox(width: 10),
-                    Text(
-                      "Total Rooms: ",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    Row(
+                      children: [
+                        Icon(Icons.home_outlined, size: 30, color: Colors.black),
+                        SizedBox(width: 12),
+                        Text(
+                          propertyName,
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+                      ],
                     ),
-                    Text(
-                      totalRoom,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
-                    ),
+                    if (isSelected) // Highlight "Current" label if selected
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.blueGrey[900], // Dark color for selected item
+                        ),
+                        child: Text(
+                          "Current",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    else // Default color for non-selected property
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.grey,
+                        ),
+                        child: Text(
+                          "Current",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
                   ],
                 ),
+                SizedBox(height: 20),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.bed_outlined, size: 30, color: Colors.black),
-                    SizedBox(width: 10),
-                    Text(
-                      "Available Rooms: ",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    Row(
+                      children: [
+                        Icon(Icons.bed_outlined, size: 30, color: Colors.black),
+                        SizedBox(width: 10),
+                        Text(
+                          "Total Rooms: ",
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          totalRoom,
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                        ),
+                      ],
                     ),
-                    Text(
-                      availableRoom,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                    Row(
+                      children: [
+                        Icon(Icons.bed_outlined, size: 30, color: Colors.black),
+                        SizedBox(width: 10),
+                        Text(
+                          "Available Rooms: ",
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          availableRoom,
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
+  }
+
+  // Fetch the selected property ID from SharedPreferences
+  Future<String?> _getSelectedPropertyId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('selected_property_id');
   }
 }

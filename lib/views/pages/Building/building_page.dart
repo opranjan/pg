@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pg/controllers/floorcontroller/addfloor_controller.dart';
 import 'package:pg/controllers/propertycontroller/room_controller.dart';
 import 'package:pg/views/pages/Building/floor/add_floor.dart';
 import 'package:pg/views/pages/Building/dashboard/property_dashboard.dart';
@@ -15,6 +16,7 @@ class BuildingPage extends StatefulWidget {
 class _BuildingPageState extends State<BuildingPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final roomController = Get.put(RoomController());
+  final floorController = Get.put(AddFloorController());
 
   @override
   void initState() {
@@ -32,7 +34,8 @@ class _BuildingPageState extends State<BuildingPage> with SingleTickerProviderSt
 
   void _handleTabSelection() {
     if (_tabController.index == 2) { // Index 2 corresponds to the "Rooms" tab
-     roomController. fetchRooms('1');
+     roomController. fetchRooms(floorController.currentFloorID.value
+     );
     }
   }
 

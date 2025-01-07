@@ -1,136 +1,152 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:intl/intl.dart';
-import 'package:pg/controllers/TenantController/TenantController.dart';
+import 'package:pg/constants/constant.dart';
+import 'package:pg/controllers/propertycontroller/new_property_form_controller.dart';
 import 'package:pg/controllers/tenantscontroller/tenants_controller.dart';
 import 'package:pg/views/widgets/cards/feature_card.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class TenantScreen extends StatelessWidget {
+class TenantScreen extends StatefulWidget {
   const TenantScreen({super.key});
 
   @override
+  _TenantScreenState createState() => _TenantScreenState();
+}
+
+class _TenantScreenState extends State<TenantScreen> {
+  final tenants = Get.put(AddTenantsController());
+  final propertyController = Get.put(PropertyFormController());
+
+  String? _selectedBuildingId; // Variable to store selected building ID
+
+  @override
+  void initState() {
+    super.initState();
+    propertyController.fetchProperties(); // Fetch the properties (building IDs)
+  }
+
+  _launchWhatsapp(String whatsapp) async {
+    var whatsappAndroid =
+        Uri.parse("whatsapp://send?phone=$whatsapp&text=hello");
+    if (await canLaunchUrl(whatsappAndroid)) {
+      await launchUrl(whatsappAndroid, mode: LaunchMode.externalApplication);
+    } else {
+      snackBar("error", "WhatsApp is not installed on the device");
+    }
+  }
+
+  // Make phone call flutter app
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+  // Filter tenants based on selected building ID
+  List getFilteredTenants() {
+    if (_selectedBuildingId == null || _selectedBuildingId!.isEmpty) {
+      return tenants.tenantlist; // Return all tenants if no filter is selected
+    } else {
+      return tenants.tenantlist
+          .where(
+              (tenant) => tenant.buildingId.toString() == _selectedBuildingId)
+          .toList();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-
-    final tenants = Get.put(AddTenantsController());
-
-
-
-    // List of tenants
-    // final List<Map<String, String>> tenants = [
-    //   {"tenantName": "John Doe", "tenantDues": "10000", "duesDate": "20-11-24", "tenantRent": "6000"},
-    //   {"tenantName": "Jane Smith", "tenantDues": "8000", "duesDate": "22-11-24", "tenantRent": "5500"},
-    //   {"tenantName": "Michael Johnson", "tenantDues": "15000", "duesDate": "18-11-24", "tenantRent": "7000"},
-    //   {"tenantName": "Emily Davis", "tenantDues": "5000", "duesDate": "25-11-24", "tenantRent": "4500"},
-    // ];
-
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildTenantInfo(),
-            const SizedBox(height: 20),
+        child: Container(
+          color: Colors.white10,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTenantInfo(),
+              const SizedBox(height: 20),
 
-            // Updated search bar with filter icon on the right
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Search Bar Container
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
+              // Building ID Dropdown (filter)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      const Text(
+                        'Filter Tenants By Building :',
+                        style: TextStyle(fontSize: 16),
                       ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Search Tenant',
-                          hintText: 'Enter search term',
-                          prefixIcon: const Icon(Icons.search),
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.filter_list),
-                            onPressed: () {
-                              // handle filter button action
-                            },
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
-                        onChanged: (value) {
-                          // handle search
-                        },
-                      ),
-                    ),
+                      const SizedBox(width: 10),
+                      Obx(() {
+                        return DropdownButton<String>(
+                          menuMaxHeight: 200,
+                          value: _selectedBuildingId,
+                          hint: const Text('Select Building ID'),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedBuildingId = value;
+                            });
+                          },
+                          items: propertyController.properties
+                              .map<DropdownMenuItem<String>>((building) {
+                            return DropdownMenuItem<String>(
+                              value: building.id.toString(),
+                              child: Text(building.name.toString()),
+                            );
+                          }).toList(),
+                        );
+                      }),
+                    ],
                   ),
-                  const SizedBox(width: 5),
-
-                  // "More" Button
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.deepPurple,
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      shadowColor: Colors.deepPurpleAccent.withOpacity(0.3),
-                      elevation: 5,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Text(
-                        "More",
-                        style: TextStyle(fontSize: 10),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Tenant Card List
-            GetBuilder<AddTenantsController>(
-              builder: (tc) {
+              // ListView for filtered tenants
+              Obx(() {
+                final filteredTenants = getFilteredTenants();
+                if (filteredTenants.isEmpty) {
+                  return Center(
+                      child:
+                          Text("No tenants found for the selected building."));
+                }
+
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount:tc.tenantlist.length,
+                  itemCount: filteredTenants.length,
                   itemBuilder: (context, index) {
-                   final tenants = tc.tenantlist[index];
+                    final tenant = filteredTenants[index];
+                    final formattedDate = tenant.createdAt != null
+                        ? DateFormat('dd-MM-yyyy')
+                            .format(DateTime.parse(tenant.createdAt.toString()))
+                        : 'N/A';
 
-
-                    // Format the createdAt date to "dd-MM-yyyy"
-      final formattedDate = tenants.createdAt != null
-          ? DateFormat('dd-MM-yyyy').format(DateTime.parse(tenants.createdAt.toString()))
-          : 'N/A';
                     return tenantCard(
-                      tenantName: tenants.name.toString(),
-                      tenantDues: tenants.altphone.toString(),
-                      duesDate:formattedDate,
-                      tenantRent: tenants.phone.toString(),
+                      tenantName: tenant.name.toString(),
+                      tenantDues: tenant.altphone
+                          .toString(), // Display tenant's alternate phone as dues
+                      duesDate: formattedDate,
+                      tenantRent: tenant.phone
+                          .toString(), // Display tenant's phone as rent
+                      onPressedcall: () {
+                        _makePhoneCall(tenant.phone.toString());
+                      },
+                      onPressedWhatsapp: () {
+                        _launchWhatsapp(tenant.altphone.toString());
+                      },
                     );
                   },
                 );
-              }
-            ),
-          ],
+              })
+            ],
+          ),
         ),
       ),
     );
@@ -138,13 +154,13 @@ class TenantScreen extends StatelessWidget {
 
   // Horizontal list of statistics
   Widget _buildTenantInfo() {
-     final List<Map<String, dynamic>> items = [
-    {"title": "Total Tenants", "data": "0", "iconColor": Colors.blue},
-    {"title": "New Tenants", "data": "300", "iconColor": Colors.green},
-    {"title": "Under Notice", "data": "4000", "iconColor": Colors.red},
-    {"title": "Joining Requests", "data": "7500", "iconColor": Colors.orange},
-    {"title": "Contact Not Added", "data": "50", "iconColor": Colors.orange},
-  ];
+    final List<Map<String, dynamic>> items = [
+      {"title": "Total Tenants", "data": "0", "iconColor": Colors.blue},
+      {"title": "New Tenants", "data": "300", "iconColor": Colors.green},
+      {"title": "Under Notice", "data": "4000", "iconColor": Colors.red},
+      {"title": "Joining Requests", "data": "7500", "iconColor": Colors.orange},
+      {"title": "Contact Not Added", "data": "50", "iconColor": Colors.orange},
+    ];
 
     return Container(
       height: 100,
@@ -158,7 +174,7 @@ class TenantScreen extends StatelessWidget {
               icon: Icons.currency_rupee,
               title: items[index]["title"]!,
               data: items[index]["data"]!,
-               iconColor: items[index]["iconColor"],
+              iconColor: items[index]["iconColor"],
             ),
           );
         },

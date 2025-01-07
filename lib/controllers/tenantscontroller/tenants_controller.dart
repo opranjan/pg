@@ -3,6 +3,7 @@ import 'package:pg/constants/app_constant.dart';
 import 'package:pg/models/tenants/add_tenants.dart';
 import 'package:pg/models/tenants/fetch_tenant.dart';
 import 'package:pg/services/dio_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddTenantsController extends GetxController {
 
@@ -27,14 +28,25 @@ class AddTenantsController extends GetxController {
   // For validation (optional)
   RxBool isFormValid = false.obs;
 
+   RxString buildingId = ''.obs;
+
 
 
     @override
-  void onInit() {
+  void onInit() async{
     super.onInit();
     // Fetch floors when the controller is initialized
+     await getBuildingId();
     fetchTenants();
   }
+
+
+
+  Future<String?> getBuildingId() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('selected_property_id');
+}
+
 
 
 

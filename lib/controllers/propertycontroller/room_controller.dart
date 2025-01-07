@@ -1,6 +1,9 @@
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg/constants/app_constant.dart';
+import 'package:pg/controllers/floorcontroller/addfloor_controller.dart';
+import 'package:pg/models/floor/floor_model.dart';
 import 'package:pg/models/room/add_room_model.dart';
 import 'package:pg/models/roommodels/room_model.dart';
 import 'package:pg/services/dio_services.dart';
@@ -25,13 +28,54 @@ class RoomController extends GetxController {
 
 
 
-  Map<String, bool> facilities = {
-    'WiFi': false,
+  // Map<String, bool> facilities = {
+  //   'WiFi': false,
+  //   'AC': false,
+  //   'TV': false,
+  //   'Parking': false,
+  //   'Laundry': false,
+  // };
+
+
+    var facilities = <String, bool>{
+    'Bed':false,
+    'Mattress':false,
+    'Pillow':false,
+    'Personal Cupboard':false,
+    'Fridge': false,
+    'Washing Machine': false,
+    'Water Purifier':false,
+    'Geyser':false,
+    'Wi-Fi': false,
+    'Daily Cleaning':false,
+    'Gas':false,
     'AC': false,
+    'Extension Board':false,
     'TV': false,
-    'Parking': false,
-    'Laundry': false,
-  };
+    
+  }.obs;
+
+
+     void toggleFacility(String facility, bool isSelected) {
+    facilities[facility] = isSelected;
+    update(); // Update UI
+  }
+
+
+
+   List<String> getSelectedFacilities() {
+    return facilities.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+  }
+
+
+
+
+
+
+
 
 
     void setRoomName(String value) {
@@ -95,15 +139,20 @@ class RoomController extends GetxController {
     update();
   }
 
-  void toggleFacility(String key, bool value) {
-    facilities[key] = value;
-    update();
-  }
+  // void toggleFacility(String key, bool value) {
+  //   facilities[key] = value;
+  //   update();
+  // }
+
+
+ 
 
   void selectDate(DateTime date) {
     selectedDate = date;
     update();
   }
+
+  final floorController = Get.put(AddFloorController());
 
 
   //fetch rooms 
@@ -111,7 +160,7 @@ class RoomController extends GetxController {
     @override
   void onInit() {
     super.onInit();
-    fetchRooms('1');
+    fetchRooms(floorController.currentFloorID.value);
   }
 
   // Fetch properties from the server
@@ -144,7 +193,7 @@ class RoomController extends GetxController {
     try {
       
         final response =
-            await DioServices.postRequest(AppConstant.addroom('1'), room.toJson());
+            await DioServices.postRequest(AppConstant.addroom(floor.toString()), room.toJson());
 
         if (response.statusCode == 200) {
           Get.snackbar("Success", "User Added successfully",

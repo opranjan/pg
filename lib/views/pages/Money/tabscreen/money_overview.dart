@@ -77,7 +77,7 @@ class MoneyOverview extends StatelessWidget {
                     child: Icon(
                       Icons.money,
                       size: 20,
-                      color: Colors.orangeAccent,
+                      color: Colors.green,
                     ),
                   ),
                 ],
@@ -153,7 +153,7 @@ class MoneyOverview extends StatelessWidget {
                     child: Icon(
                       Icons.money,
                       size: 20,
-                      color: Colors.orangeAccent,
+                      color: Colors.green,
                     ),
                   ),
                 ],
@@ -177,25 +177,58 @@ class MoneyOverview extends StatelessWidget {
             todaysCollection: "10000", 
             thisMonthCollection: "1000000", 
             thisMonthExpanse: "1000", 
-            onPressed: (){}),
+            onPressed: (){},
+            context: context
+            ),
+            
 
-            moneyCard(
+
+
+             moneyCard(
             buildingName: "Shiv Boys Hostel", 
             unpaiddues: "10000", 
             noofunpaidtenant: "10", 
             todaysCollection: "10000", 
             thisMonthCollection: "1000000", 
             thisMonthExpanse: "1000", 
-            onPressed: (){}),
+            onPressed: (){},
+            context: context
+            ),
+            
 
-            moneyCard(
+
+
+             moneyCard(
             buildingName: "Shiv Boys Hostel", 
             unpaiddues: "10000", 
             noofunpaidtenant: "10", 
             todaysCollection: "10000", 
             thisMonthCollection: "1000000", 
             thisMonthExpanse: "1000", 
-            onPressed: (){})
+            onPressed: (){},
+            context: context
+            ),
+            
+
+
+             moneyCard(
+            buildingName: "Shiv Boys Hostel", 
+            unpaiddues: "10000", 
+            noofunpaidtenant: "10", 
+            todaysCollection: "10000", 
+            thisMonthCollection: "1000000", 
+            thisMonthExpanse: "1000", 
+            onPressed: (){},
+            context: context
+            ),
+            
+            
+
+      
+
+
+
+
           ],
         ),
       ),
@@ -212,23 +245,16 @@ class MoneyOverview extends StatelessWidget {
     // Example data for the horizontal list
     final List<Map<String, dynamic>> items = [
       {"title": "Total Dues", "data": "5000", "iconColor": Colors.red},
-      {"title": "Overdue Dues", "data": "250000", "iconColor": Colors.red},
-      {"title": "November Dues", "data": "60000", "iconColor": Colors.red},
-      {"title": "November Rent Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "November Electricity Bill Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "November Cash Deposits Due", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Unpaid Rent", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Electricity Bill Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Future Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Late Fine Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Short Term Dues", "data": "7500", "iconColor": Colors.red},
-      {"title": "Total Long Term Dues", "data": "7500", "iconColor": Colors.red},
+      {"title": "M12's Dues", "data": "250000", "iconColor": Colors.red},
+      {"title": "M12's Expense", "data": "60000", "iconColor": Colors.red},
+     
     ];
 
     return Container(
       height: 100,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
         itemCount: items.length,
         itemBuilder: (context, index) {
           return Padding(

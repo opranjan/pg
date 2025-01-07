@@ -24,30 +24,70 @@ class AddFloorController extends GetxController {
   }
 
 
-  // Fetch the floors data from the API
-  Future<void> fetchFloors() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-     String? storedPropertyId = prefs.getString('selected_property_id');
-    isLoading.value = true;
-    update(); // Trigger rebuild to show the loading indicator
+  // // Fetch the floors data from the API
+  // Future<void> fetchFloors() async {
+  //     SharedPreferences prefs = await SharedPreferences.getInstance();
+  //    String? storedPropertyId = prefs.getString('selected_property_id');
+  //   isLoading.value = true;
+  //   update(); // Trigger rebuild to show the loading indicator
 
-    try {
-      final response = await DioServices.get(AppConstant.addFloor(storedPropertyId.toString()));
-      if (response.statusCode == 200) {
-        floorlist.value = (response.data as List)
-            .map((json) => Floor.fromJson(json))
-            .toList();
-        update(); // Trigger rebuild with new data
-      } else {
-        Get.snackbar("Error", "Failed to fetch floors: ${response.statusCode}");
+  //   try {
+  //     final response = await DioServices.get(AppConstant.addFloor(storedPropertyId.toString()));
+  //     if (response.statusCode == 200) {
+  //       floorlist.value = (response.data as List)
+  //           .map((json) => Floor.fromJson(json))
+  //           .toList();
+
+  //           currentFloorID.value = floorlist[0].id as String;
+
+  //       update(); 
+
+
+
+  //     } else {
+  //       Get.snackbar("Error", "Failed to fetch floors: ${response.statusCode}");
+  //     }
+  //   } catch (error) {
+  //     Get.snackbar("Exception", "Something went wrong: $error");
+  //   } finally {
+  //     isLoading.value = false;
+  //     update(); // Trigger rebuild to hide the loading indicator
+  //   }
+  // }
+
+
+
+  Future<void> fetchFloors() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? storedPropertyId = prefs.getString('selected_property_id');
+  isLoading.value = true;
+  update(); // Trigger rebuild to show the loading indicator
+
+  try {
+    final response = await DioServices.get(AppConstant.addFloor(storedPropertyId.toString()));
+    if (response.statusCode == 200) {
+      floorlist.value = (response.data as List)
+          .map((json) => Floor.fromJson(json))
+          .toList();
+
+      // Ensure the list is not empty and get the ID of the 0th floor
+      if (floorlist.isNotEmpty) {
+        currentFloorID.value = floorlist[0].id.toString(); // Ensure 'id' is a string
       }
-    } catch (error) {
-      Get.snackbar("Exception", "Something went wrong: $error");
-    } finally {
-      isLoading.value = false;
-      update(); // Trigger rebuild to hide the loading indicator
+
+      update(); // Update the UI
+
+    } else {
+      Get.snackbar("Error", "Failed to fetch floors: ${response.statusCode}");
     }
+  } catch (error) {
+    Get.snackbar("Exception", "Something went wrong: $error");
+  } finally {
+    isLoading.value = false;
+    update(); // Trigger rebuild to hide the loading indicator
   }
+}
+
 
 
 

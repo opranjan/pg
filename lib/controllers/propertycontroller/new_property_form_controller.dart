@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:pg/models/buildingmodels/fetchproperty.dart';
-import 'package:pg/models/buildingmodels/property.dart';
 import 'package:pg/services/dio_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,6 +34,9 @@ class PropertyFormController extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? storedName = prefs.getString('selected_property_name');
     propertyNameObs.value = storedName; // Update the observable property name
+
+    update();
+    print("hhhhhhhhhhhhhh: ${propertyNameObs.value}");
   }
 
   // Method to save the updated property name to SharedPreferences
@@ -44,26 +46,7 @@ class PropertyFormController extends GetxController {
     propertyNameObs.value = newName; // Update the observable property name
   }
 
-  // Fetch properties from the server
-  // Future<void> fetchProperties() async {
-  //   isLoading.value = true;
-  //   try {
-  //     final response = await DioServices.get("buildings");
-  //     if (response.statusCode == 200) {
-  //       properties.value = (response.data as List)
-  //           .map((json) => FetchProperty.fromJson(json))
-  //           .toList();
-  //           update();
-  //     } else {
-  //       Get.snackbar("Error", "Failed to fetch properties: ${response.statusCode}");
-  //     }
-  //   } catch (error) {
-  //     print("Something went wrong: $error");
-  //     Get.snackbar("Exception", "Something went wrong: $error");
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
+ 
 
   // Fetch properties from the server
   Future<void> fetchProperties() async {

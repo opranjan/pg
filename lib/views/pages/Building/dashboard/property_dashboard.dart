@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg/controllers/propertycontroller/new_property_form_controller.dart';
+import 'package:pg/controllers/reportscontroller/property_report_controller.dart';
 import 'package:pg/views/pages/Building/dashboard/add_building_modal.dart';
-import 'package:pg/views/widgets/building/build_building_featurecard.dart';
 import 'package:pg/views/widgets/building/property_layout.dart';
 import 'package:pg/views/widgets/cards/feature_card.dart';
-import 'package:pg/views/widgets/custom_button.dart';
+
 
 class PropertyDashboard extends StatelessWidget {
   const PropertyDashboard({super.key});
@@ -28,6 +28,7 @@ class PropertyDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
    
     final propertyController = Get.put(PropertyFormController());
+    final propertyReportController =Get.put(PropertyReportController());
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -48,7 +49,7 @@ class PropertyDashboard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            _buildBuildingOverview(),
+            _buildBuildingOverview(propertyController.properties.length.toString(), 'Total Rooms', "${propertyReportController.totalRooms.value}"),
 
             // CustomButton(text: "Test", onPressed: (){
             //   propertyController.fetchProperties();
@@ -102,12 +103,13 @@ class PropertyDashboard extends StatelessWidget {
   }
 
   // Building overview widget (horizontal list)
-  Widget _buildBuildingOverview() {
+  Widget _buildBuildingOverview(String totalProperties, String totalRooms, String totalBookings) {
+
     // Example data for the horizontal list
     final List<Map<String, dynamic>> items = [
-      {"title": "Total properties", "data": "200", "icon":Icons.apartment},
-      {"title": "Total Room", "data": "300", "icon":Icons.bed},
-      {"title": "Total Bookings", "data": "N/A", "icon":Icons.group},
+      {"title": "Total properties", "data": totalProperties, "icon":Icons.apartment},
+      {"title": "Total Room", "data": totalRooms, "icon":Icons.bed},
+      {"title": "Total Bookings", "data": totalBookings, "icon":Icons.group},
     ];
 
     return Container(

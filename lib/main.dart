@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ThemeController>(builder: (c) {
       return GetMaterialApp(
-        title: 'sPOS',
+        title: 'Dolphin Pg',
         debugShowCheckedModeBanner: false,
         theme: c.lightTheme ? dark : light,
         home: const SplashScreen(),

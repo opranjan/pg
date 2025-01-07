@@ -52,7 +52,7 @@ class AddFloor extends StatelessWidget {
         ),
         SizedBox(width: 15),
         Text(
-          "Floor : " + floor.id.toString(),
+          "Floor : " + index.toString(),
           style: TextStyle(
             fontSize: 16, // Slightly larger text for better readability
             fontWeight: FontWeight.bold, // Bold text for emphasis

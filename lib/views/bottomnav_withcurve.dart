@@ -2,16 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:get/get.dart';
 import 'package:pg/controllers/bottom_nav_controller.dart';
-import 'package:pg/controllers/floorcontroller/addfloor_controller.dart';
 import 'package:pg/controllers/propertycontroller/new_property_form_controller.dart';
 import 'package:pg/views/pages/Money/money_page.dart';
 import 'package:pg/views/pages/People/people_page.dart';
 import 'package:pg/views/pages/Building/building_page.dart';
 import 'package:pg/views/pages/home_page.dart';
-import 'package:pg/views/widgets/app_bar.dart';
 import 'package:pg/views/widgets/bottom_modal.dart';
 import 'package:pg/views/widgets/mainappbar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override
@@ -79,11 +76,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
         "Select Property",
         titleObservable: propertyController.propertyNameObs,
        isIcon: false,
-       onpress: ()async{
+       onpress: ()async {
         print("clicked..");
           propertyController.fetchProperties();
          
-
           print("roomname ");
           _openBottomModal();
        }
