@@ -1,5 +1,6 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pg/constants/app_constant.dart';
 import 'package:pg/models/buildingmodels/fetchproperty.dart';
 import 'package:pg/services/dio_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,9 @@ class PropertyFormController extends GetxController {
     var properties = <FetchProperty>[].obs; // Observable list of properties
     var propertyNameObs = Rx<String?>(null); // Observable property name
     // var propertylist = <FetchProperty>[].obs;
+
+    var totalPropertiesReports =0.obs;
+    var totalRoomsReports =0.obs;
 
   
 
@@ -72,6 +76,31 @@ class PropertyFormController extends GetxController {
     } finally {
       // End the loading state regardless of success or failure
       isLoading.value = false;
+    }
+  }
+
+
+
+    // Fetch properties from the server
+  Future<void> propertiesReports() async {
+  
+
+    try {
+      final response = await DioServices.get(AppConstant.propertyreports);  // Replace with your actual API endpoint
+      if (response.statusCode == 200) {
+       totalPropertiesReports.value = response.data['total_properties'];
+       totalRoomsReports.value = response.data['total_rooms'];
+
+       print("dfjdfjdfk :");
+        update();  // Update the UI after data is fetched
+      } else {
+        // Handle the case when the status code is not 200
+        Get.snackbar("Error", "Failed to fetch properties: ${response.statusCode}");
+      }
+    } catch (error) {
+      print("Something went wrong: $error");
+      // Display error message to the user
+      Get.snackbar("Exception", "Something went wrong: $error");
     }
   }
 

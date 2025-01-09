@@ -39,6 +39,7 @@ class _HomePageState extends State<HomePage> {
     duesController.dueslist.map((element) => element.amount);
 
     fetchBuildingOverview();
+    propertyController.propertiesReports();
     
   }
 
@@ -121,7 +122,8 @@ class _HomePageState extends State<HomePage> {
                 ),
 
 
-                Text("Today Collection: ${overviewData!['today_collection']}"),
+                Text("Today Collection: ${overviewData?['today_collection'] ?? '0'}"),
+
 
                Padding(
   padding: const EdgeInsets.all(8.0),
@@ -157,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      _buildPropertyCardList(propertyController.properties.length.toString(), '0', '0'),
+                      _buildPropertyCardList('${propertyController.totalPropertiesReports.value}', '${propertyController.totalRoomsReports.value}', '0'),
                     ],
                   ),
                 ),
@@ -213,8 +215,8 @@ class _HomePageState extends State<HomePage> {
     // Example data for the horizontal list
      final List<Map<String, dynamic>> items = [
     {"title": "Total Properties", "data": totalProperties, "iconColor": Colors.blue,  "iconname":Icons.apartment},
-    {"title": "Total Bookings", "data": totalBookings, "iconColor": Colors.blue,  "iconname":Icons.apartment},
-    {"title": "Pending Bookings", "data": totalPendingBooking, "iconColor": Colors.red,  "iconname":Icons.apartment},
+    {"title": "Total Rooms", "data": totalBookings, "iconColor": Colors.blue,  "iconname":Icons.apartment},
+    {"title": "Total Bookings", "data": totalPendingBooking, "iconColor": Colors.red,  "iconname":Icons.apartment},
   ];
 
     return Container(

@@ -35,7 +35,7 @@ class PropertyReportController extends GetxController{
       // );
       update();
 
-      print("HHHHHHHHHHHHHHH: $propertyreports");
+      print("HHHHHHHHHHHHHHH: ${totalRooms.value} ");
     } else {
       Get.snackbar("Error", "Failed to fetch properties reports: ${response.statusCode}");
     }

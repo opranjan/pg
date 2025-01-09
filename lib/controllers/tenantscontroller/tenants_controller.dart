@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pg/constants/app_constant.dart';
+import 'package:pg/models/tenants/add_tenant_model.dart';
 import 'package:pg/models/tenants/add_tenants.dart';
 import 'package:pg/models/tenants/fetch_tenant.dart';
 import 'package:pg/services/dio_services.dart';
@@ -29,6 +30,15 @@ class AddTenantsController extends GetxController {
   RxBool isFormValid = false.obs;
 
    RxString buildingId = ''.obs;
+
+
+
+   //////////////////////
+   RxString selectedLockInPeriod =''.obs;
+   RxString selectedNoticePeriod = ''.obs;
+   RxString selectedAgreementPeriod = ''.obs;
+
+   
 
 
 
@@ -127,6 +137,24 @@ class AddTenantsController extends GetxController {
     updateFormValidity();
   }
 
+
+
+   // Setters for Lock-in Period, Notice Period, and Agreement Period
+  void setLockInPeriod(String period) {
+    selectedLockInPeriod.value = period;
+    update();  // To trigger UI updates
+  }
+
+  void setNoticePeriod(String period) {
+    selectedNoticePeriod.value = period;
+    update();  // To trigger UI updates
+  }
+
+  void setAgreementPeriod(String period) {
+    selectedAgreementPeriod.value = period;
+    update();  // To trigger UI updates
+  }
+
   /////////////////////////////
 
 
@@ -137,6 +165,31 @@ class AddTenantsController extends GetxController {
       print("started ..");
         final response =
             await DioServices.postRequest(AppConstant.tenants, tenant.toJson());
+             print(response.statusCode);
+        if (response.statusCode == 201) {
+          Get.snackbar("Success", "Teanat Added successfully",
+              snackPosition: SnackPosition.BOTTOM);
+          // Get.to(() => StaffSettings());
+          // fetchRooms();
+        } else {
+          Map<String, dynamic> responseData = response.data;
+          Get.snackbar("Error", "${responseData['error']}",
+              snackPosition: SnackPosition.BOTTOM);
+        }
+     
+    } catch (error) {
+      Get.snackbar("Error", "Error occured ",
+          snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+
+  /////////////////////////////////////////////////////////////
+     Future<void> addTenant(AddTenantModel addtenant) async {
+    try {
+      print("started ..");
+        final response =
+            await DioServices.postRequest(AppConstant.tenants, addtenant.toJson());
              print(response.statusCode);
         if (response.statusCode == 201) {
           Get.snackbar("Success", "Teanat Added successfully",

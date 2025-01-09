@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pg/controllers/floorcontroller/addfloor_controller.dart';
 import 'package:pg/controllers/tenantscontroller/tenants_controller.dart';
-import 'package:pg/models/tenants/add_tenants.dart';
+import 'package:pg/models/tenants/add_tenant_model.dart';
 import 'package:pg/views/widgets/app_bar.dart';
 import 'package:pg/views/widgets/custom_button.dart';
 
@@ -152,8 +152,194 @@ class AddTenantForm extends StatelessWidget {
                 ),
 
                 SizedBox(
-                  height: 50,
+                  height: 10,
                 ),
+
+
+
+
+             Material(
+              elevation: 4,
+               child: Container(
+                 width: double.infinity, // Makes the container take the full width
+                 margin: EdgeInsets.symmetric( vertical: 8),
+                 padding: EdgeInsets.all(16),
+                 decoration: BoxDecoration(
+                   color: Colors.white,
+                   borderRadius: BorderRadius.circular(12),
+                   boxShadow: [
+                     BoxShadow(
+                       color: Colors.grey.withOpacity(0.2),
+                       spreadRadius: 2,
+                       blurRadius: 5,
+                       offset: Offset(0, 3), // Shadow position
+                     ),
+                   ],
+                   border: Border.all(color: Colors.grey.shade300),
+                 ),
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Text(
+                           "Lock-in-Period",
+                           style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey.shade800,
+                           ),
+                         ),
+
+                            Text(
+                              controller.selectedLockInPeriod.value ?? "Select",
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                         PopupMenuButton<String>(
+                           icon: Icon(Icons.arrow_drop_down, color: Colors.blue),
+                           onSelected: (value) {
+                print("Selected: $value"); // Handle selection
+                           },
+                           itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: '1 Month',
+                  child: Text('1 Month'),
+                ),
+                PopupMenuItem(
+                  value: '3 Month',
+                  child: Text('3 Month'),
+                ),
+                PopupMenuItem(
+                  value: '6 Month',
+                  child: Text('6 Month'),
+                ),
+               
+                 PopupMenuItem(
+                  value: '11 Month',
+                  child: Text('11 Month'),
+                ),
+                           ],
+                         ),
+                       ],
+                     ),
+                     Divider(color: Colors.grey.shade300, thickness: 1, height: 20),
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Text(
+                           "Notice-Period",
+                           style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey.shade800,
+                           ),
+                         ),
+
+
+                           Text(
+                              controller.selectedNoticePeriod.value ?? "Select",
+                              style: TextStyle(color: Colors.blue),
+                            ),
+
+
+                         PopupMenuButton<String>(
+                           icon: Icon(Icons.arrow_drop_down, color: Colors.blue),
+                           onSelected: (value) {
+                print("Selected: $value"); // Handle selection
+                           },
+                           itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: '15 Days',
+                  child: Text('15 Days'),
+                ),
+                PopupMenuItem(
+                  value: '30 Days',
+                  child: Text('30 Days'),
+                ),
+                PopupMenuItem(
+                  value: '60 Days',
+                  child: Text('60 Days'),
+                ),
+               
+                PopupMenuItem(
+                  value: '90 Days',
+                  child: Text('90 Days'),
+                ),
+                           ],
+                         ),
+                       ],
+                     ),
+                     Divider(color: Colors.grey.shade300, thickness: 1, height: 20),
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Text(
+                           "Agreement Period",
+                           style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey.shade800,
+                           ),
+                         ),
+
+
+
+
+                            Text(
+                              controller.selectedAgreementPeriod.value ?? "Select",
+                              style: TextStyle(color: Colors.blue),
+                            ),
+
+
+
+                         PopupMenuButton<String>(
+                           icon: Icon(Icons.arrow_drop_down, color: Colors.blue),
+                           onSelected: (value) {
+                print("Selected: $value"); // Handle selection
+                           },
+                           itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: '1 Month',
+                  child: Text('1 Month'),
+                ),
+                PopupMenuItem(
+                  value: '2 Months',
+                  child: Text('2 Months'),
+                ),
+                PopupMenuItem(
+                  value: '3 Months',
+                  child: Text('3 Months'),
+                ),
+               
+               
+               
+                 PopupMenuItem(
+                  value: '6 Months',
+                  child: Text('6 Months'),
+                ),
+               
+                 PopupMenuItem(
+                  value: '11 Months',
+                  child: Text('11 Months'),
+                ),
+               
+                 PopupMenuItem(
+                  value: '2 Years',
+                  child: Text('2 Years'),
+                ),
+                           ],
+                         ),
+                       ],
+                     ),
+                   ],
+                 ),
+               ),
+             ),
+
+
+
+
 
                 // Button at the bottom
                 Align(
@@ -167,22 +353,57 @@ class AddTenantForm extends StatelessWidget {
 
                         print(
                             "${controller.tenantName} ${controller.tenantPhone} ${controller.tenantAltPhone}  ${controller.selectedFloor} ${controller.selectedRoom}  ${controller.rent}  ${controller.securityDeposit}");
+                        
 
-                        controller.createTenant(AddTenant(
-                            name: controller.tenantName.value,
-                            phone: "${controller.tenantPhone}",
-                            altphone: "${controller.tenantAltPhone}",
-                            buildingId: 1,
-                            roomId: controller.selectedRoom.value,
-                            unitType: "Single",
-                            floor: "${controller.selectedRoom.value}",
-                            sharingType: "Double",
-                            dailyStayChargesMin: 500,
-                            dailyStayChargesMax: 600,
-                            isRoomAvailable: true,
-                            electricityReadingLast: 150,
-                            electricityReadingDate: '2024-11-27',
-                            roomPhotos: "url/photo"));
+                        controller.addTenant(
+                          AddTenantModel(
+                            tenant:Tenant(
+                              name: controller.tenantName.value, 
+                              phone: "${controller.tenantPhone}", 
+                              altphone: "${controller.tenantAltPhone}",
+                              buildingId: 1, 
+                              roomId: controller.selectedRoom.value, 
+                              unitType: "Single", 
+                              floor:"${controller.selectedFloor.value}",
+                              rent: 5000, 
+                              sharingType: "Double", 
+                              dailyStayChargesMin: 500, 
+                              dailyStayChargesMax: 600, 
+                              isRoomAvailable: true, 
+                              electricityReadingLast: 150, 
+                              electricityReadingDate:  '2024-11-27', 
+                              roomPhotos: "url/photo") , 
+
+
+                            stayDetails: StayDetails(
+                              building: "building A",
+                               room: "Room A", 
+                               moveIn: "2025-01-01", 
+                               moveOut: "2025-12-31", 
+                               lockInPeriod: 12, 
+                               noticePeriod: 3, 
+                               agreementPeriod: 12, 
+                               rentalFrequency: "monthly", 
+                               addRentOn: 15, 
+                               fixedRent: 2000, 
+                               regularSecurityDeposit: 10000, 
+                               roomElectricityMeter: "12345", 
+                               tenantElectricityMeter: "12345", 
+                               otherDetail: {}
+                               ), 
+
+
+
+                            paymentDetails: PaymentDetails(
+                              paymentDate:  "2025-01-05", 
+                              amountPaid: 500, 
+                              dueDate:  "2025-01-05", 
+                              dueAmount: 1000, 
+                              description:  "Rent payment"
+                              )
+                            )
+                          );
+                        
                         Get.snackbar(
                             'Form Submitted', 'Tenant Added Successfully');
                       } else {
